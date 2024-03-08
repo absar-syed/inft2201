@@ -5,22 +5,21 @@
   Time: 4:30 p.m.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@include file="./includes/header.jsp"%>
+<%@include file="includes/header.jsp"%>
 <html>
 <head>
-    <title>Home</title>
+    <title>Login</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
-    <link rel="stylesheet" href="./css/style.css">
 </head>
 
 
-    <body>
-    <h1>WELCOME</h1>
+<body>
+<h1>Login</h1>
 
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 
+<footer></footer>
 
-<%@include file="includes/footer.jsp"%>
 </html>
