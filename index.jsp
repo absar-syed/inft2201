@@ -1,6 +1,6 @@
 <%--
   Created by IntelliJ IDEA.
-  User: absar
+  User: Absar Syed
   Date: 2024-03-07
   Time: 4:30 p.m.
 --%>
@@ -11,16 +11,21 @@
     <title>Home</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="content/style.css">
 </head>
 
 
-    <body>
-    <h1>WELCOME</h1>
+<body>
+    <div class="container m-5 text-white">
+        <h1>WELCOME</h1>
+        <p>Welcome to the User's home page click the button below to login!</p>
+        <button type="button" class="btn btn-outline-light" ><a class="no-decor" href="login.jsp">Login!</a></button>
+    </div>
+
 
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 
 
-<%@include file="includes/footer.jsp"%>
+<%@include file="./includes/footer.jsp"%>
 </html>

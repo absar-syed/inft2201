@@ -1,0 +1,8 @@
+.no-decor {
+    text-decoration: none;
+    color: white;
+}
+
+body {
+    background-image: url("bg.jpg");
+}

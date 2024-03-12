@@ -1,25 +1,42 @@
 <%--
   Created by IntelliJ IDEA.
-  User: absar
+  User: Absar Syed
   Date: 2024-03-07
   Time: 4:30 p.m.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@include file="includes/header.jsp"%>
+<%@include file="./includes/header.jsp"%>
 <html>
 <head>
-    <title>Login</title>
+    <title>Home</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" href="content/style.css">
 </head>
 
 
 <body>
-<h1>Login</h1>
+<div class="container m-5 text-white">
+    <h1>LOGIN</h1>
+
+    <form>
+        <div class="mb-3">
+            <label class="form-label">User ID</label>
+            <input type="email" class="form-control" id="userid">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" id="password">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+
 
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 
-<footer></footer>
 
+<%@include file="./includes/footer.jsp"%>
 </html>

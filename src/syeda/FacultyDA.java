@@ -6,14 +6,10 @@
 
 package syeda;
 
-import org.postgresql.util.PSQLException;
-
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Stack;
-import java.util.Vector;
 
 public class FacultyDA
 {
@@ -280,7 +276,7 @@ public class FacultyDA
 
 			rs.close();
 
-		}catch (PSQLException e) {
+		}catch (SQLException e) {
 			System.out.println(e);
 		} catch (ParseException e) {
             throw new RuntimeException(e);
@@ -294,59 +290,61 @@ public class FacultyDA
 	 * @param aFaculty an instance of Faculty
 	 * @return an integer, number of records updated
 	 * @throws NotFoundException when a record is not found
-	 * @throws ParseException when string to date parse is unsuccessful
 	 * @throws SQLException when an error in the SQL is found
 	 */
-	public static int update(Faculty aFaculty) throws NotFoundException, ParseException, SQLException {
+	public static int update(Faculty aFaculty) throws NotFoundException{
+
 		int records = 0;  //records updated in method
-
-		// retrieve the Faculty argument attribute values
-		id = aFaculty.getId();
-		password = aFaculty.getPassword();
-		firstName = aFaculty.getFirstName();
-		lastName = aFaculty.getLastName();
-		emailAddress = aFaculty.getEmailAddress();
-		lastAccess = aFaculty.getLastAccess();
-		enrolDate = aFaculty.getEnrolDate();
-		enabled = aFaculty.isEnabled();
-		type = aFaculty.getType();
-		schoolCode = aFaculty.getSchoolCode();
-		schoolDescription = aFaculty.getSchoolDescription();
-		office = aFaculty.getOffice();
-		extension = aFaculty.getExtension();
-
-		PasswordHasher pass = new PasswordHasher(password);
-		String lastAccessAsStr = SQL_DF.format(lastAccess);
-		String enrolDateAsStr = SQL_DF.format(enrolDate);
-
-		PreparedStatement psUserUpdate = aConnection.prepareStatement(
-		"UPDATE Users SET password = ?, firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?," +
-			" Enabled= ? WHERE userid IN (SELECT userid FROM Students WHERE userid = ?); ");
-
-		psUserUpdate.setString(1, pass.Hash());
-		psUserUpdate.setString(2, firstName);
-		psUserUpdate.setString(3, lastName);
-		psUserUpdate.setString(4, emailAddress);
-		psUserUpdate.setString(5, lastAccessAsStr);
-		psUserUpdate.setString(6, enrolDateAsStr);
-		psUserUpdate.setString(7, String.valueOf(type));
-		psUserUpdate.setBoolean(8, enabled);
-		psUserUpdate.setLong(9,id);
-
-		PreparedStatement psFacultyUpdate = aConnection.prepareStatement(
-				"UPDATE Faculty SET schoolcode = ?, schooldescription = ?, office = ?, extension = ? " +
-					"WHERE userid = ?; ");
-
-		psFacultyUpdate.setString(1, schoolCode);
-		psFacultyUpdate.setString(2, schoolDescription);
-		psFacultyUpdate.setString(3, office);
-		psFacultyUpdate.setInt(4, extension);
-		psFacultyUpdate.setLong(5, id);
 
 		// see if this Faculty exists in the database
 		// NotFoundException is thrown by find method
 		try
 		{
+
+			// retrieve the Faculty argument attribute values
+			id = aFaculty.getId();
+			password = aFaculty.getPassword();
+			firstName = aFaculty.getFirstName();
+			lastName = aFaculty.getLastName();
+			emailAddress = aFaculty.getEmailAddress();
+			lastAccess = aFaculty.getLastAccess();
+			enrolDate = aFaculty.getEnrolDate();
+			enabled = aFaculty.isEnabled();
+			type = aFaculty.getType();
+			schoolCode = aFaculty.getSchoolCode();
+			schoolDescription = aFaculty.getSchoolDescription();
+			office = aFaculty.getOffice();
+			extension = aFaculty.getExtension();
+
+			PasswordHasher pass = new PasswordHasher(password);
+			String lastAccessAsStr = SQL_DF.format(lastAccess);
+			String enrolDateAsStr = SQL_DF.format(enrolDate);
+
+			PreparedStatement psUserUpdate = aConnection.prepareStatement(
+					"UPDATE Users SET password = ?, firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?," +
+							" Enabled= ? WHERE userid IN (SELECT userid FROM Students WHERE userid = ?); ");
+
+			psUserUpdate.setString(1, pass.Hash());
+			psUserUpdate.setString(2, firstName);
+			psUserUpdate.setString(3, lastName);
+			psUserUpdate.setString(4, emailAddress);
+			psUserUpdate.setString(5, lastAccessAsStr);
+			psUserUpdate.setString(6, enrolDateAsStr);
+			psUserUpdate.setString(7, String.valueOf(type));
+			psUserUpdate.setBoolean(8, enabled);
+			psUserUpdate.setLong(9,id);
+
+			PreparedStatement psFacultyUpdate = aConnection.prepareStatement(
+					"UPDATE Faculty SET schoolcode = ?, schooldescription = ?, office = ?, extension = ? " +
+							"WHERE userid = ?; ");
+
+			psFacultyUpdate.setString(1, schoolCode);
+			psFacultyUpdate.setString(2, schoolDescription);
+			psFacultyUpdate.setString(3, office);
+			psFacultyUpdate.setInt(4, extension);
+			psFacultyUpdate.setLong(5, id);
+
+
 			retrieve(id);  //determine if there is a Faculty record to be updated
 			// if found, execute the SQL update statement
 			records = psUserUpdate.executeUpdate() + psFacultyUpdate.executeUpdate();
