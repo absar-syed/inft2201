@@ -8,7 +8,7 @@
 <%@include file="header.jsp"%>
 <html>
 <head>
-    <title>Student Tracking</title>
+    <title>Home</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
     <link rel="stylesheet" href="content/style.css">
@@ -17,9 +17,8 @@
 
 <body>
     <div class="container m-5 text-white">
-        <h1>DURHAM COLLEGE STUDENTS TRACKING</h1>
-        <p>Click the button below to access your account and view your information!</p>
-        <a class="no-decor" href="login.jsp">Login!</a>
+        <h1>STUDENT DASHBOARD</h1>
+        <p>DashBoard Stuff</p>
     </div>
 
 

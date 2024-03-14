@@ -1,5 +1,7 @@
 //package syeda;
 //
+//import exceptions.NotFoundException;
+//
 //import javax.servlet.ServletException;
 //import javax.servlet.http.HttpServlet;
 //import javax.servlet.http.HttpServletRequest;
@@ -32,11 +34,11 @@
 //            Connection c = DatabaseConnect.initialize();
 //            Student.initialize(c);
 //            HttpSession session = request.getSession(true);
-//            String login = new String();
+//            String login;
 //            try
 //            {   // retrieve data from DB
 //                login = request.getParameter( "Login" ); //this is the name of the text input box on the form
-//                Student aCustomer = Student.find(login); //attempt to find the Customer, this could cause a NotFoundException
+//                Student aStudent = Student.retrieve(login); //attempt to find the Customer, this could cause a NotFoundException
 //                // if the Customer was found and retrieved from the db
 //				//put the found Customer onto the session
 //                session.setAttribute("student", aStudent);
