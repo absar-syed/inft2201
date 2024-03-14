@@ -17,7 +17,7 @@
                     <a class="nav-link" aria-current="page" href="index.jsp">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../jsp/login.jsp">Login</a>
+                    <a class="nav-link" href="../login.jsp">Login</a>
                 </li>
             </ul>
         </div>
