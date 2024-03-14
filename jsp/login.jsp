@@ -5,7 +5,7 @@
   Time: 4:30 p.m.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@include file="./includes/header.jsp"%>
+<%@include file="../includes/header.jsp"%>
 <%@ page import = "syeda.*" %>
 <%   String errorMessage = (String)session.getAttribute("errors");
     String login = (String)session.getAttribute("login");
@@ -17,9 +17,9 @@
 <html>
 <head>
     <title>Home</title>
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
-    <link rel="stylesheet" href="content/style.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.css">
+    <link rel="stylesheet" href="../content/style.css">
 </head>
 
 
@@ -44,9 +44,9 @@
 </div>
 
 
-<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 
 
-<%@include file="./includes/footer.jsp"%>
+<%@include file="../includes/footer.jsp"%>
 </html>
