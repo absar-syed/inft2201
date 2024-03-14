@@ -9,6 +9,7 @@ import exceptions.*;
 import org.postgresql.util.PSQLException;
 
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.Vector;
 import java.sql.*;
 import java.util.Date;
@@ -103,7 +104,6 @@ public class StudentDA
 	 */
 	static Vector<Mark> marks;
 
-//	 establish the database connection
 
 	/**
 	 * method that initializes the database connection
@@ -119,7 +119,6 @@ public class StudentDA
             { System.out.println(e.getMessage());	}
 	}
 
-	// close the database connection
 
 	/**
 	 * method that terminates the database connection
@@ -133,6 +132,7 @@ public class StudentDA
             catch (SQLException e)
             { System.out.println(e.getMessage());	}
 	}
+
 
 	/**
 	 * method that creates a record and inserts it into the database
@@ -218,6 +218,7 @@ public class StudentDA
         return inserted;
 	}
 
+
 	/**
 	 * method to retreive a record from the database
 	 * @param userid the id of the student
@@ -249,7 +250,7 @@ public class StudentDA
 				programCode = String.valueOf(rs.getString("programcode"));
 				programDescription = String.valueOf(rs.getString("programdescription"));
 				year = rs.getInt("year");
-				password = User.DEFAULT_PASSWORD;
+				password = String.valueOf(rs.getString("password"));
 				firstName = String.valueOf(rs.getString("firstname"));
 				lastName = String.valueOf(rs.getString("lastname"));
 				emailAddress = String.valueOf(rs.getString("emailaddress"));
@@ -283,6 +284,7 @@ public class StudentDA
 
         return aStudent;
 	}
+
 
 	/**
 	 * method that updates a record in the database
@@ -358,6 +360,7 @@ public class StudentDA
 		return records;
 	}
 
+
 	/**
 	 * method that deletes a record from the database
 	 * @param aStudent an instance of student
@@ -365,7 +368,6 @@ public class StudentDA
 	 * @throws NotFoundException when a record cannot be found
 	 * @throws SQLException when an error in the SQL is found
 	 */
-
 	public static int delete(Student aStudent) throws NotFoundException, SQLException
 	{
 		int records = 0;
@@ -402,24 +404,41 @@ public class StudentDA
 		return records;
 	}
 
+
 	/**
 	 * Method to authenticate the student's account exists
 	 * @param studentid is the student's id number
 	 * @param password is the student's password
 	 * @return a Student object
 	 */
-	public static Student authenticate(long studentid, String password)
-	{
+	public static Student authenticate(long studentid, String password) throws NotFoundException {
 		aStudent = null;
-//		try
-//		{
-//
-//		}
-//		catch ()
-//		{
-//
-//		}
-		return aStudent;
+		try
+		{
+
+			aStudent = retrieve(studentid);
+
+			String RetrievedPassword = aStudent.getPassword();
+
+            PasswordHasher Pass = new PasswordHasher(password);
+            String HashedGivenPassword = Pass.Hash();
+
+
+            if (Objects.equals(RetrievedPassword, HashedGivenPassword))
+			{
+				return aStudent;
+			}
+            else
+            {
+                throw new NotFoundException("Password does not match");
+            }
+
+		}
+		catch (NotFoundException | SQLException e)
+		{
+			throw new NotFoundException(e.getMessage());
+		}
 	}
+
 }
 
