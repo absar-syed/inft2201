@@ -5,11 +5,10 @@
  */
 
 package syeda;
-import com.sun.org.apache.bcel.internal.generic.LADD;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.postgresql.util.PSQLException;
 
 import java.text.SimpleDateFormat;
+import java.util.Objects;
 import java.util.Vector;
 import java.sql.*;
 import java.util.Date;
@@ -134,6 +133,44 @@ public class StudentDA
             catch (SQLException e)
             { System.out.println(e.getMessage());	}
 	}
+
+	/**
+	 * Method to authenticate the student's account exists
+	 *
+	 * @param studentid the student's id number
+	 * @param password  the student's password
+	 * @return
+	 */
+	public static Student authenticate(long studentid, String password)
+	{
+		aStudent = null;
+
+		try
+		{
+			aStudent = retrieve(studentid);
+
+			String RetrievedPass = aStudent.getPassword();
+
+			PasswordHasher Pass = new PasswordHasher(password);
+			String GivenPass = Pass.Hash();
+
+			if (Objects.equals(RetrievedPass, GivenPass)) {
+				return aStudent;
+			}
+			else {
+				throw new NotFoundException("The password does not match a user in our database.");
+			}
+
+		}
+		catch (SQLException | NotFoundException e)
+		{
+			System.out.println(e.getMessage());
+
+        }
+
+		return aStudent;
+	}
+
 
 	/**
 	 * method that creates a record and inserts it into the database

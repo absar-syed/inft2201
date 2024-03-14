@@ -351,4 +351,8 @@ public class Student extends User {
         StudentDA.delete(this);
     }
 
+    public static Student authenticate(long studentid, String password) throws SQLException, NotFoundException {
+        return StudentDA.authenticate(studentid, password);
+    }
+
 }

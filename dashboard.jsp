@@ -17,9 +17,8 @@
 
 <body>
     <div class="container m-5 text-white">
-        <h1>WELCOME</h1>
-        <p>Welcome to the User's home page click the button below to login!</p>
-        <a class="no-decor" href="login.jsp">Login!</a>
+        <h1>STUDENT DASHBOARD</h1>
+        <p>DashBoard Stuff</p>
     </div>
 
 
