@@ -5,8 +5,7 @@
  */
 
 package syeda;
-import com.sun.org.apache.bcel.internal.generic.LADD;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import exceptions.*;
 import org.postgresql.util.PSQLException;
 
 import java.text.SimpleDateFormat;
@@ -403,5 +402,24 @@ public class StudentDA
 		return records;
 	}
 
+	/**
+	 * Method to authenticate the student's account exists
+	 * @param studentid is the student's id number
+	 * @param password is the student's password
+	 * @return a Student object
+	 */
+	public static Student authenticate(long studentid, String password)
+	{
+		aStudent = null;
+//		try
+//		{
+//
+//		}
+//		catch ()
+//		{
+//
+//		}
+		return aStudent;
+	}
 }
 

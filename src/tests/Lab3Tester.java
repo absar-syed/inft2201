@@ -3,14 +3,8 @@ package tests;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-<<<<<<< HEAD
 import exceptions.NotFoundException;
-=======
->>>>>>> origin/main
 import syeda.*;
-//import inft2201.kunza.utils.DatabaseConnect;
-//import inft2201.kunza.exceptions.*;
-//import inft2201.kunza.models.*;
 
 public class Lab3Tester {
 
@@ -54,11 +48,7 @@ public class Lab3Tester {
         } catch (NotFoundException nfe) {
             System.out.println("Authentication Failed: " + nfe.getMessage());
         } catch (SQLException e) {
-<<<<<<< HEAD
             throw new RuntimeException(e.getMessage());
-=======
-            throw new RuntimeException(e);
->>>>>>> origin/main
         }
 
     }

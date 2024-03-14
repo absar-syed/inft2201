@@ -1,5 +1,6 @@
 package syeda;
 
+import syeda.*;
 import exceptions.DuplicateException;
 import exceptions.InvalidUserDataException;
 import exceptions.NotFoundException;
