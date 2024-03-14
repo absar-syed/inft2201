@@ -1,12 +1,12 @@
-package syeda;
+package exceptions;
 
 public class NotFoundException extends Exception{
 
-    NotFoundException(){
+    public NotFoundException(){
         super();
     }
 
-    NotFoundException(String message){
+    public NotFoundException(String message){
         super(message);
     }
 }

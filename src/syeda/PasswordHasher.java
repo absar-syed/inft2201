@@ -44,14 +44,14 @@ public class PasswordHasher
 
         try
         {
-            // Create MessageDigest instance for MD5
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            // Create MessageDigest instance for SHA256
+            MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
 
             // Add password bytes to digest
-            md.update(passwordToHash.getBytes());
+            sha256.update(passwordToHash.getBytes());
 
             // Get the hash's bytes
-            byte[] bytes = md.digest();
+            byte[] bytes = sha256.digest();
 
             //bytes[] has bytes in decimal format. Convert it to hexadecimal format
             StringBuilder sb = new StringBuilder();
@@ -74,7 +74,7 @@ public class PasswordHasher
     public static void main(String[] args)
     {
 
-       PasswordHasher testPassword = new PasswordHasher("Test");
+       PasswordHasher testPassword = new PasswordHasher("password");
 
        System.out.println(testPassword.Hash());
 

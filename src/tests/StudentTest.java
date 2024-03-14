@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 //import inft2202.kunza.InvalidUserDataException;
 //import inft2202.kunza.Student;
 import syeda.Student;
-import syeda.InvalidUserDataException;
+import exceptions.InvalidUserDataException;
 
 public class StudentTest {
 

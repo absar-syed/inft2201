@@ -1,4 +1,4 @@
-package syeda;
+package exceptions;
 
 public class InvalidUserDataException extends Exception {
 

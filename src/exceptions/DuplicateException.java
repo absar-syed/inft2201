@@ -1,12 +1,12 @@
-package syeda;
+package exceptions;
 
 public class DuplicateException extends Exception{
 
-    DuplicateException(){
+    public DuplicateException(){
         super();
     }
 
-    DuplicateException(String message){
+    public DuplicateException(String message){
         super(message);
     }
 }

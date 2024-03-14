@@ -6,6 +6,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="./includes/header.jsp"%>
+<%@ page import = "syeda.*" %>
+<%   String errorMessage = (String)session.getAttribute("errors");
+    String login = (String)session.getAttribute("login");
+    if(errorMessage == null)
+        errorMessage="";
+    if(login == null)
+        login = "";
+%>
 <html>
 <head>
     <title>Home</title>
@@ -18,14 +26,16 @@
 <body>
 <div class="container m-5 text-white">
     <h1>LOGIN</h1>
-
+    <div class="alert alert-danger" role="alert">
+        <%= errorMessage %>
+    </div>
     <form>
         <div class="mb-3">
-            <label class="form-label">User ID</label>
+            <label for="userid" class="form-label">User ID</label>
             <input type="email" class="form-control" id="userid">
         </div>
         <div class="mb-3">
-            <label class="form-label">Password</label>
+            <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control" id="password">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>

@@ -1,4 +1,6 @@
 package tests;
+import exceptions.DuplicateException;
+import exceptions.NotFoundException;
 import syeda.*;
 import java.sql.*;
 import java.util.*;

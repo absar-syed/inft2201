@@ -7,6 +7,10 @@ package tests;  //change this to make the class part of your package
  * @version 1.1 (January 11th, 2023)
  * @since 1.1
  */
+import exceptions.InvalidIdException;
+import exceptions.InvalidNameException;
+import exceptions.InvalidPasswordException;
+import exceptions.InvalidUserDataException;
 import syeda.*;
 
 import java.util.*;

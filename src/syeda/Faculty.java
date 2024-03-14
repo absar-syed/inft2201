@@ -1,5 +1,9 @@
 package syeda;
 
+import exceptions.DuplicateException;
+import exceptions.InvalidUserDataException;
+import exceptions.NotFoundException;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;

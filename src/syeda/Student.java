@@ -1,7 +1,10 @@
 package syeda;
 
+import exceptions.DuplicateException;
+import exceptions.InvalidUserDataException;
+import exceptions.NotFoundException;
+
 import java.sql.*;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -349,6 +352,10 @@ public class Student extends User {
     public void delete() throws NotFoundException, SQLException {
 
         StudentDA.delete(this);
+    }
+
+    public static Student authenticate(long studentid, String password) throws SQLException, NotFoundException {
+        return StudentDA.authenticate(studentid, password);
     }
 
 }
