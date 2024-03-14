@@ -5,14 +5,11 @@
  */
 
 package syeda;
-
-
-import exceptions.DuplicateException;
-import exceptions.InvalidUserDataException;
-import exceptions.NotFoundException;
+import com.sun.org.apache.bcel.internal.generic.LADD;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.postgresql.util.PSQLException;
 
 import java.text.SimpleDateFormat;
-import java.util.Objects;
 import java.util.Vector;
 import java.sql.*;
 import java.util.Date;
@@ -137,50 +134,6 @@ public class StudentDA
             catch (SQLException e)
             { System.out.println(e.getMessage());	}
 	}
-
-	/**
-	 * Method to authenticate that the student's account exists
-	 * @param studentid the student's id number
-	 * @param password  the student's password
-	 * @return Student object
-	 */
-	public static Student authenticate(long studentid, String password)
-	{
-		aStudent = null;
-		return aStudent;
-	}
-
-//	public static Student authenticate(long studentid, String password)
-//	{
-//		aStudent = null;
-//
-//		try
-//		{
-//			aStudent = retrieve(studentid);
-//
-//			String RetrievedPass = aStudent.getPassword();
-//
-//			PasswordHasher Pass = new PasswordHasher(password);
-//			String GivenPass = Pass.Hash();
-//
-//			if (GivenPass.equals(RetrievedPass))
-//			{
-//				return aStudent;
-//			}
-//			else
-//			{
-//				throw new NotFoundException("Password does not match with any user in the database.");
-//			}
-//		}
-//		catch (SQLException | NotFoundException e)
-//		{
-//			System.out.println(e.getMessage());
-//
-//        }
-//
-//		return aStudent;
-//	}
-
 
 	/**
 	 * method that creates a record and inserts it into the database
@@ -323,7 +276,7 @@ public class StudentDA
 
 			rs.close();
 
-		}catch (SQLException e) {
+		}catch (PSQLException e) {
 			System.out.println(e);
 		} catch (ParseException e) {
             throw new RuntimeException(e);
@@ -340,7 +293,7 @@ public class StudentDA
 	 * @throws ParseException when string to date parse is unsuccessful
 	 * @throws SQLException when an error in the SQL is found
 	 */
-	public static int update(Student aStudent) throws NotFoundException, SQLException {
+	public static int update(Student aStudent) throws NotFoundException, ParseException, SQLException {
 		int records = 0;  //records updated in method
 
 		// retrieve the student argument attribute values
