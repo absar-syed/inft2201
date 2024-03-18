@@ -49,11 +49,11 @@ public class LoginServlet extends HttpServlet {
                 //retrieve user creds from db and create a student object or throw NotFoundException
                 Student aStudent = authenticate(UserID, Password);
 
-                aStudent.setLastAccess(new Date());
-
-                aStudent.update();
-
-                aStudent = retrieve(UserID);
+//                aStudent.setLastAccess(new Date());
+//
+//                aStudent.update();
+//
+//                aStudent = retrieve(UserID);
 
                 //set the student object to the session and any errors
                 session.setAttribute("student", aStudent);
@@ -62,7 +62,7 @@ public class LoginServlet extends HttpServlet {
                 // redirect the user to dashboard
                 response.sendRedirect("./dashboard.jsp");
 
-            }catch(NotFoundException | ParseException | SQLException e)
+            }catch(NotFoundException e)
             {
 //                //sending errors to the page thru the session
 //                StringBuffer errorBuffer = new StringBuffer();
