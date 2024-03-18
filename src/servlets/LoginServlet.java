@@ -25,12 +25,12 @@ public class LoginServlet extends HttpServlet {
                        throws IOException
     {
 
-        String logFile = "./logger.log";
-	    File f = new File(logFile);
-	    PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
-	    System.setErr(printStream);
-	    System.setOut(printStream);
-	    System.out.println("Log started: " + new java.util.Date());
+//        String logFile = "./logger.log";
+//	    File f = new File(logFile);
+//	    PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
+//	    System.setErr(printStream);
+//	    System.setOut(printStream);
+//	    System.out.println("Log started: " + new java.util.Date());
 
         try
         {
@@ -49,11 +49,9 @@ public class LoginServlet extends HttpServlet {
                 //retrieve user creds from db and create a student object or throw NotFoundException
                 Student aStudent = authenticate(UserID, Password);
 
-//                aStudent.setLastAccess(new Date());
-//
-//                aStudent.update();
-//
-//                aStudent = retrieve(UserID);
+                //update last access in the db
+                aStudent.setLastAccess(new Date());
+                aStudent.update();
 
                 //set the student object to the session and any errors
                 session.setAttribute("student", aStudent);
@@ -65,13 +63,13 @@ public class LoginServlet extends HttpServlet {
             }catch(NotFoundException e)
             {
 //                //sending errors to the page thru the session
-//                StringBuffer errorBuffer = new StringBuffer();
-//                errorBuffer.append("<strong>Your sign in information is not valid.<br/>");
-//                errorBuffer.append("Please try again.</strong>");
-////                String error = "Login information was invalid. Try again.";
-//
-//                session.setAttribute("errors", errorBuffer.toString());
-//                response.sendRedirect("./login.jsp");
+                StringBuffer errorBuffer = new StringBuffer();
+                errorBuffer.append("<strong>Your sign in information is not valid.<br/>");
+                errorBuffer.append("Please try again.</strong>");
+//                String error = "Login information was invalid. Try again.";
+
+                session.setAttribute("errors", errorBuffer.toString());
+                response.sendRedirect("./login.jsp");
             }
         }
         catch (Exception e)

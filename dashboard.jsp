@@ -8,15 +8,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp"%>
 <%@ page import="static syeda.User.DF" %>
-<%  Student aStudent = (Student) session.getAttribute("student");
+<%
+    Student aStudent = (Student) session.getAttribute("student");
+
     String FullName = aStudent.getFirstName() + " " + aStudent.getLastName();
     long StudentID = aStudent.getId();
     String Email = aStudent.getEmailAddress();
     String ProgramCode = aStudent.getProgramCode();
     String ProgramDescription = aStudent.getProgramDescription();
     int Year = aStudent.getYear();
-//    String Enrol = DF.format(aStudent.getEnrolDate()) ;
-//    String LastAccess = DF.format(aStudent.getLastAccess()) ;
+    String Enrol = DF.format(aStudent.getEnrolDate()) ;
+    String LastAccess = DF.format(aStudent.getLastAccess()) ;
+
 %>
 
 <html>
@@ -42,8 +45,8 @@
             <p class="card-text">Program Code: <%= ProgramCode%></p>
             <p class="card-text">Program Description: <%= ProgramDescription%></p>
             <p class="card-text">Year: <%= Year%></p>
-<%--            <p class="card-text">Enrol Date: <%= Enrol%></p>--%>
-<%--            <p class="card-text">Last Access: <%= LastAccess%></p>--%>
+            <p class="card-text">Enrol Date: <%= Enrol%></p>
+            <p class="card-text">Last Access: <%= LastAccess%></p>
 
         </div>
     </div>
