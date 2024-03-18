@@ -26,21 +26,26 @@
         INFT2201 - Project for INFT2201, Web Dev Enterprise
     </description>
 
-<!--    <servlet>-->
-<!--        <servlet-name>LoginServlet</servlet-name>-->
-<!--        <servlet-class>demo.LoginServlet</servlet-class>-->
-<!--    </servlet>-->
-<!--    <servlet>-->
-<!--        <servlet-name>UpdateCustomerServlet</servlet-name>-->
-<!--        <servlet-class>demo.UpdateCustomerServlet</servlet-class>-->
-<!--    </servlet>-->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>servlets.LoginServlet</servlet-class>
+    </servlet>
 
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>LoginServlet</servlet-name>-->
-<!--        <url-pattern>/Login</url-pattern>-->
-<!--    </servlet-mapping>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>UpdateCustomerServlet</servlet-name>-->
-<!--        <url-pattern>/AnyPattern</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>servlets.LogoutServlet</servlet-class>
+    </servlet>
+
+
+
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+
 </web-app>

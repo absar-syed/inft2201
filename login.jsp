@@ -4,19 +4,16 @@
   Date: 2024-03-07
   Time: 4:30 p.m.
 --%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="header.jsp"%>
-<%@ page import = "syeda.*" %>
-<%   String errorMessage = (String)session.getAttribute("errors");
-    String login = (String)session.getAttribute("login");
-    if(errorMessage == null)
-        errorMessage="";
-    if(login == null)
-        login = "";
+<%  String errorMessage = (String)session.getAttribute("errors");
+//    Student aStudent = (Student)session.getAttribute("student");
+
 %>
 <html>
 <head>
-    <title>Home</title>
+    <title>Login</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
     <link rel="stylesheet" href="content/style.css">
@@ -24,15 +21,21 @@
 
 
 <body>
-<div class="container m-5 text-white">
-    <h1>LOGIN</h1>
-<%--    <div class="alert alert-danger" role="alert">--%>
-<%--&lt;%&ndash;        <%= errorMessage %>&ndash;%&gt;--%>
-<%--    </div>--%>
-    <form>
-        <div class="mb-3">
+<div class="container text-white">
+
+
+    <form class="m-5" name="Login" method="post" action="./Login">
+
+        <h1>LOGIN</h1>
+        <% if(errorMessage != null) {%>
+        <div class="alert alert-danger">
+            <%= errorMessage %>
+        </div>
+        <%}%>
+
+        <div >
             <label for="userid" class="form-label">User ID</label>
-            <input type="email" class="form-control" id="userid" name="userid">
+            <input  type="text" class="form-control" id="userid" name="userid">
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>

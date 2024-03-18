@@ -1,6 +1,5 @@
 package servlets;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,12 +15,12 @@ import static syeda.Student.authenticate;
 public class LoginServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request,
-                            HttpServletResponse response)
-					throws IOException
+                       HttpServletResponse response)
+                       throws IOException
     {
 
 	   	//logger
-	   	String logFile = "./test_log.log";
+	   	String logFile = "./logger.log";
 	    File f = new File(logFile);
 	    PrintStream printStream = new PrintStream(new BufferedOutputStream(new FileOutputStream(f)), true);
 	    System.setErr(printStream);
@@ -84,7 +83,7 @@ public class LoginServlet extends HttpServlet {
     }
     public void doGet(HttpServletRequest request,
                             HttpServletResponse response)
-                                    throws ServletException, IOException {
+                                    throws IOException {
         doPost(request, response);
     }
 

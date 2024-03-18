@@ -47,8 +47,6 @@ public class Lab3Tester {
             System.out.println(stud.getFirstName() + " " + stud.getLastName());
         } catch (NotFoundException nfe) {
             System.out.println("Authentication Failed: " + nfe.getMessage());
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
         }
 
     }

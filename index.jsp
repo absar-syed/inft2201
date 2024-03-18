@@ -20,6 +20,7 @@
         <h1>DURHAM COLLEGE STUDENTS TRACKING</h1>
         <p>Click the button below to access your account and view your information!</p>
         <a class="no-decor" href="login.jsp">Login!</a>
+        <button type="button" class="btn btn-light" href="#">Login</button>
     </div>
 
 
