@@ -7,10 +7,15 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.file.Files;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Date;
+
 import exceptions.NotFoundException;
 import syeda.DatabaseConnect;
 import syeda.Student;
 import static syeda.Student.authenticate;
+import static syeda.Student.retrieve;
 
 
 public class LoginServlet extends HttpServlet {
@@ -20,8 +25,7 @@ public class LoginServlet extends HttpServlet {
                        throws IOException
     {
 
-	   	//logger
-	   	String logFile = "./logger.log";
+        String logFile = "./logger.log";
 	    File f = new File(logFile);
 	    PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
 	    System.setErr(printStream);
@@ -35,10 +39,8 @@ public class LoginServlet extends HttpServlet {
             Student.initialize(c);
             HttpSession session = request.getSession(true);
 
-
             try
             {
-
 
                 //initialize variables to store user inputs
                 long UserID = Long.parseLong(request.getParameter( "userid" ));
@@ -47,6 +49,12 @@ public class LoginServlet extends HttpServlet {
                 //retrieve user creds from db and create a student object or throw NotFoundException
                 Student aStudent = authenticate(UserID, Password);
 
+                aStudent.setLastAccess(new Date());
+
+                aStudent.update();
+
+                aStudent = retrieve(UserID);
+
                 //set the student object to the session and any errors
                 session.setAttribute("student", aStudent);
                 session.setAttribute("errors", "");
@@ -54,34 +62,31 @@ public class LoginServlet extends HttpServlet {
                 // redirect the user to dashboard
                 response.sendRedirect("./dashboard.jsp");
 
-            }catch( NotFoundException nfe)
+            }catch(NotFoundException | ParseException | SQLException e)
             {
-                //new code == way better, if I do say so myself
-                //sending errors to the page thru the session
-                StringBuffer errorBuffer = new StringBuffer();
-                errorBuffer.append("<strong>Your sign in information is not valid.<br/>");
-                errorBuffer.append("Please try again.</strong>");
-//                if(Student.authenticate(User))
-//                  session.setAttribute("login", login);
-//                else
-//                {
-//                  errorBuffer.append("Invalid login id.</strong>");
-//                  session.setAttribute("login", "");
-//                }
-                session.setAttribute("errors", errorBuffer.toString());
-                response.sendRedirect("./login.jsp");
-
+//                //sending errors to the page thru the session
+//                StringBuffer errorBuffer = new StringBuffer();
+//                errorBuffer.append("<strong>Your sign in information is not valid.<br/>");
+//                errorBuffer.append("Please try again.</strong>");
+////                String error = "Login information was invalid. Try again.";
+//
+//                session.setAttribute("errors", errorBuffer.toString());
+//                response.sendRedirect("./login.jsp");
             }
         }
-   	 catch (Exception e) //not connected
+        catch (Exception e)
         {
             System.out.println(e);
             String line1="<h2>A network error has occurred!</h2>";
             String line2="<p>Please notify your system " +
-                                                    "administrator and check log. "+e.toString()+"</p>";
+                    "administrator and check log. "+e.toString()+"</p>";
             formatErrorPage(line1, line2,response);
+
         }
+
     }
+
+
     public void doGet(HttpServletRequest request,
                             HttpServletResponse response)
                                     throws IOException {
@@ -89,7 +94,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     public void formatErrorPage( String first, String second,
-            HttpServletResponse response) throws IOException
+                                 HttpServletResponse response) throws IOException
     {
         PrintWriter output = response.getWriter();
         response.setContentType( "text/html" );
@@ -97,4 +102,5 @@ public class LoginServlet extends HttpServlet {
         output.println(second);
         output.close();
     }
+
 }

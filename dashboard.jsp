@@ -7,7 +7,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp"%>
-<%@ page import="java.util.Date" %>
+<%@ page import="static syeda.User.DF" %>
 <%  Student aStudent = (Student) session.getAttribute("student");
     String FullName = aStudent.getFirstName() + " " + aStudent.getLastName();
     long StudentID = aStudent.getId();
@@ -15,8 +15,8 @@
     String ProgramCode = aStudent.getProgramCode();
     String ProgramDescription = aStudent.getProgramDescription();
     int Year = aStudent.getYear();
-    Date Enrol = aStudent.getEnrolDate();
-    Date LastAccess = aStudent.getLastAccess();
+    String Enrol = DF.format(aStudent.getEnrolDate()) ;
+    String LastAccess = DF.format(aStudent.getLastAccess());
 %>
 
 <html>
@@ -47,6 +47,7 @@
 
         </div>
     </div>
+
     <div class="m-5">
         <form name="Logout" method="get" action="./Logout">
             <button type="submit" class="btn btn-light" >Logout</button>
