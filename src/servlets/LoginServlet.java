@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.nio.file.Files;
 import java.sql.Connection;
 import exceptions.NotFoundException;
 import syeda.DatabaseConnect;
@@ -22,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 	   	//logger
 	   	String logFile = "./logger.log";
 	    File f = new File(logFile);
-	    PrintStream printStream = new PrintStream(new BufferedOutputStream(new FileOutputStream(f)), true);
+	    PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
 	    System.setErr(printStream);
 	    System.setOut(printStream);
 	    System.out.println("Log started: " + new java.util.Date());

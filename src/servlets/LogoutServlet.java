@@ -16,7 +16,8 @@ public class LogoutServlet extends HttpServlet {
         HttpSession session = request.getSession(true); //retrieve the session (or start)
         session.removeAttribute("student"); //remove the object stored at login
         session.invalidate(); //delete the entire session
-        session.setAttribute("message","You have successfully logged out"); //give an informational message
+        session = request.getSession(true); //start session again
+        session.setAttribute("loggedOut","You have successfully logged out"); //give an informational message
         response.sendRedirect("./login.jsp"); // redirect to login.jsp
     }
 }

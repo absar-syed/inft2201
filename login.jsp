@@ -1,4 +1,4 @@
-<%--
+        <%--
   Created by IntelliJ IDEA.
   User: Absar Syed
   Date: 2024-03-07
@@ -7,8 +7,16 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="header.jsp"%>
-<%  String errorMessage = (String)session.getAttribute("errors");
-//    Student aStudent = (Student)session.getAttribute("student");
+<%
+    String errorMessage = null;
+    String logoutMessage = null;
+
+    if (session.getAttribute("errors") != null) {
+        errorMessage = (String) session.getAttribute("errors");
+    }
+    else if (session.getAttribute("loggedOut") != null) {
+        logoutMessage = (String) session.getAttribute("loggedOut");
+    }
 
 %>
 <html>
@@ -27,11 +35,19 @@
     <form class="m-5" name="Login" method="post" action="./Login">
 
         <h1>LOGIN</h1>
-        <% if(errorMessage != null) {%>
+        <% if (errorMessage != null) {%>
         <div class="alert alert-danger">
-            <%= errorMessage %>
+            <%=errorMessage%>
         </div>
-        <%}%>
+        <%}
+        else if (logoutMessage != null)  { %>
+        <div class="alert alert-info" role="alert">
+            <%= logoutMessage%>
+        </div>
+        <% }
+        session.removeAttribute("loggedOut");
+        session.removeAttribute("errors");
+        %>
 
         <div >
             <label for="userid" class="form-label">User ID</label>
