@@ -5,17 +5,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.nio.file.Files;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.Date;
 
 import exceptions.NotFoundException;
 import syeda.DatabaseConnect;
 import syeda.Student;
 import static syeda.Student.authenticate;
-import static syeda.Student.retrieve;
 
 
 public class LoginServlet extends HttpServlet {
@@ -50,8 +45,8 @@ public class LoginServlet extends HttpServlet {
                 Student aStudent = authenticate(UserID, Password);
 
                 //update last access in the db
-                aStudent.setLastAccess(new Date());
-                aStudent.update();
+//                aStudent.setLastAccess(new Date());
+//                aStudent.update();
 
                 //set the student object to the session and any errors
                 session.setAttribute("student", aStudent);
