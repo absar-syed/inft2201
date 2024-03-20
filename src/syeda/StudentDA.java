@@ -314,23 +314,21 @@ public class StudentDA
 		programDescription = aStudent.getProgramDescription();
 		year = aStudent.getYear();
 
-		PasswordHasher pass = new PasswordHasher(password);
 		String lastAccessAsStr = SQL_DF.format(lastAccess);
 		String enrolDateAsStr = SQL_DF.format(enrolDate);
 
 		PreparedStatement psUsersUpdate = aConnection.prepareStatement(
-		"UPDATE Users SET password = ?, firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?," +
-			" Enabled= ? WHERE userid IN (SELECT userid FROM Students WHERE userid = ?); ");
+		"UPDATE Users SET firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?," +
+			" Enabled= ? WHERE userid = ?");
 
-		psUsersUpdate.setString(1, pass.Hash());
-		psUsersUpdate.setString(2, firstName);
-		psUsersUpdate.setString(3, lastName);
-		psUsersUpdate.setString(4, emailAddress);
-		psUsersUpdate.setString(5, lastAccessAsStr);
-		psUsersUpdate.setString(6, enrolDateAsStr);
-		psUsersUpdate.setString(7, String.valueOf(type));
-		psUsersUpdate.setBoolean(8, enabled);
-		psUsersUpdate.setLong(9,id);
+		psUsersUpdate.setString(1, firstName);
+		psUsersUpdate.setString(2, lastName);
+		psUsersUpdate.setString(3, emailAddress);
+		psUsersUpdate.setString(4, lastAccessAsStr);
+		psUsersUpdate.setString(5, enrolDateAsStr);
+		psUsersUpdate.setString(6, String.valueOf(type));
+		psUsersUpdate.setBoolean(7, enabled);
+		psUsersUpdate.setLong(8,id);
 
 		PreparedStatement psStudentsUpdate = aConnection.prepareStatement(
 		"UPDATE Students SET programcode = ?, programdescription = ?, year = ? " +
