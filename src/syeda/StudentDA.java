@@ -107,7 +107,7 @@ public class StudentDA
 
 	/**
 	 * method that initializes the database connection
-	 * @param c is a instance of a connection
+	 * @param c is an instance of a connection
 	 */
 	public static void initialize(Connection c)
 	{
@@ -256,7 +256,7 @@ public class StudentDA
 				emailAddress = String.valueOf(rs.getString("emailaddress"));
 				lastAccess = SQL_DF.parse(rs.getString("lastaccess"));
 				enrolDate = SQL_DF.parse(rs.getString("enroldate"));
-				enabled = Boolean.parseBoolean(rs.getString("enabled"));
+				enabled = rs.getBoolean("enabled");
 				type = rs.getString("type").charAt(0); //=============================================================================
 
 				// create student
@@ -276,10 +276,8 @@ public class StudentDA
 
 			rs.close();
 
-		}catch (PSQLException e) {
-			System.out.println(e);
-		} catch (ParseException e) {
-            throw new RuntimeException(e);
+		}catch (ParseException e) {
+            throw new RuntimeException(e.getMessage());
         }
 
         return aStudent;
@@ -291,10 +289,10 @@ public class StudentDA
 	 * @param aStudent an instance of student
 	 * @return an integer, number of records updated
 	 * @throws NotFoundException when a record is not found
-	 * @throws ParseException when string to date parse is unsuccessful
 	 * @throws SQLException when an error in the SQL is found
 	 */
-	public static int update(Student aStudent) throws NotFoundException, ParseException, SQLException {
+	public static int update(Student aStudent) throws NotFoundException, SQLException {
+
 		int records = 0;  //records updated in method
 
 		// retrieve the student argument attribute values
@@ -302,7 +300,6 @@ public class StudentDA
 		programCode = aStudent.getProgramCode();
 		programDescription = aStudent.getProgramDescription();
 		year = aStudent.getYear();
-		password = aStudent.getPassword();
 		firstName = aStudent.getFirstName();
 		lastName = aStudent.getLastName();
 		emailAddress = aStudent.getEmailAddress();
@@ -318,8 +315,8 @@ public class StudentDA
 		String enrolDateAsStr = SQL_DF.format(enrolDate);
 
 		PreparedStatement psUsersUpdate = aConnection.prepareStatement(
-		"UPDATE Users SET firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?," +
-			" Enabled= ? WHERE userid = ?");
+		"UPDATE Users SET firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?, " +
+			"Enabled= ? WHERE userid = ?");
 
 		psUsersUpdate.setString(1, firstName);
 		psUsersUpdate.setString(2, lastName);
@@ -353,8 +350,8 @@ public class StudentDA
 		{
 			throw new NotFoundException("Student with student ID " + id
 					+ " cannot be updated, does not exist in the system.");
-		}catch (SQLException e)
-		{ System.out.println(e);}
+		}
+
 		return records;
 	}
 

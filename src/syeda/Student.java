@@ -345,7 +345,7 @@ public class Student extends User {
         StudentDA.create(this);
     }
 
-    public int update() throws NotFoundException, ParseException, SQLException {
+    public int update() throws NotFoundException, SQLException {
        return StudentDA.update(this);
     }
 

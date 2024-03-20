@@ -42,10 +42,8 @@ public class Lab3Tester {
         System.out.println("Should Update Last Access of Absar");
         Student Absar = Student.retrieve(100706764);
         System.out.println("Current Last Access: " + Absar.getLastAccess());
-
         Absar.setLastAccess(new Date());
         Absar.update();
-        Absar = Student.retrieve(100706764);
         System.out.println("Updated Last Access: " + Absar.getLastAccess());
 
     }

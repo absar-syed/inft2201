@@ -74,7 +74,7 @@ public class PasswordHasher
     public static void main(String[] args)
     {
 
-       PasswordHasher testPassword = new PasswordHasher("password");
+       PasswordHasher testPassword = new PasswordHasher("student");
 
        System.out.println(testPassword.Hash());
 
