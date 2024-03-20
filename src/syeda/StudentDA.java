@@ -261,7 +261,7 @@ public class StudentDA
 
 				// create student
 				try{
-					aStudent = new Student(id, password, firstName, lastName, emailAddress, enrolDate, lastAccess,
+					aStudent = new Student(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate,
 							enabled, type, programCode, programDescription, year);
 //					System.out.println(aStudent.toString());
 
@@ -310,9 +310,10 @@ public class StudentDA
 		programCode = aStudent.getProgramCode();
 		programDescription = aStudent.getProgramDescription();
 		year = aStudent.getYear();
-
 		String lastAccessAsStr = SQL_DF.format(lastAccess);
 		String enrolDateAsStr = SQL_DF.format(enrolDate);
+//		password = aStudent.getPassword();
+
 
 		PreparedStatement psUsersUpdate = aConnection.prepareStatement(
 		"UPDATE Users SET firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?, " +

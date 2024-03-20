@@ -7,8 +7,8 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.file.Files;
 import java.sql.Connection;
-import java.text.ParseException;
 import java.util.Date;
+import java.util.Objects;
 
 import exceptions.NotFoundException;
 import syeda.DatabaseConnect;
@@ -39,6 +39,9 @@ public class LoginServlet extends HttpServlet {
 
             try
             {
+                if (Objects.equals(request.getParameter("userid"), "") || Objects.equals(request.getParameter("password"), "")){
+                    throw new NotFoundException("Inputs must not be blank");
+                }
 
                 //initialize variables to store user inputs
                 long UserID = Long.parseLong(request.getParameter( "userid" ));
@@ -89,6 +92,7 @@ public class LoginServlet extends HttpServlet {
                                     throws IOException {
         doPost(request, response);
     }
+
 
     public void formatErrorPage( String first, String second,
                                  HttpServletResponse response) throws IOException
