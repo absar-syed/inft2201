@@ -5,7 +5,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.nio.file.Files;
 import java.sql.Connection;
+import java.text.ParseException;
+import java.util.Date;
 
 import exceptions.NotFoundException;
 import syeda.DatabaseConnect;
@@ -20,12 +23,12 @@ public class LoginServlet extends HttpServlet {
                        throws IOException
     {
 
-//        String logFile = "./logger.log";
-//	    File f = new File(logFile);
-//	    PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
-//	    System.setErr(printStream);
-//	    System.setOut(printStream);
-//	    System.out.println("Log started: " + new java.util.Date());
+        String logFile = "./logger.log";
+	    File f = new File(logFile);
+	    PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
+	    System.setErr(printStream);
+	    System.setOut(printStream);
+	    System.out.println("Log started: " + new java.util.Date());
 
         try
         {
@@ -41,12 +44,13 @@ public class LoginServlet extends HttpServlet {
                 long UserID = Long.parseLong(request.getParameter( "userid" ));
                 String Password = request.getParameter("password");
 
+
                 //retrieve user creds from db and create a student object or throw NotFoundException
                 Student aStudent = authenticate(UserID, Password);
 
                 //update last access in the db
-//                aStudent.setLastAccess(new Date());
-//                aStudent.update();
+                aStudent.setLastAccess(new Date());
+                aStudent.update();
 
                 //set the student object to the session and any errors
                 session.setAttribute("student", aStudent);
@@ -55,12 +59,12 @@ public class LoginServlet extends HttpServlet {
                 // redirect the user to dashboard
                 response.sendRedirect("./dashboard.jsp");
 
-            }catch(NotFoundException e)
+            }catch(NotFoundException | NumberFormatException e)
             {
 //                //sending errors to the page thru the session
                 StringBuffer errorBuffer = new StringBuffer();
-                errorBuffer.append("<strong>Your sign in information is not valid.<br/>");
-                errorBuffer.append("Please try again.</strong>");
+                errorBuffer.append("Your sign in information is not valid. ");
+                errorBuffer.append("Please try again.");
 //                String error = "Login information was invalid. Try again.";
 
                 session.setAttribute("errors", errorBuffer.toString());
@@ -72,7 +76,7 @@ public class LoginServlet extends HttpServlet {
             System.out.println(e);
             String line1="<h2>A network error has occurred!</h2>";
             String line2="<p>Please notify your system " +
-                    "administrator and check log. "+e.toString()+"</p>";
+                    "administrator and check log. "+e.getMessage()+"</p>";
             formatErrorPage(line1, line2,response);
 
         }
