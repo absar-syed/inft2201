@@ -49,7 +49,7 @@
         session.removeAttribute("errors");
         %>
 
-        <div >
+        <div class="mb-3">
             <label for="userid" class="form-label">User ID</label>
             <input  type="text" class="form-control" id="userid" name="userid">
         </div>

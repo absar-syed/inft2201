@@ -37,16 +37,17 @@ public class LoginServlet extends HttpServlet {
             Student.initialize(c);
             HttpSession session = request.getSession(true);
 
-            try
-            {
-                if (Objects.equals(request.getParameter("userid"), "") || Objects.equals(request.getParameter("password"), "")){
+            try {
+                if (request.getParameter("userid") == "" || request.getParameter("password") == "") {
                     throw new NotFoundException("Inputs must not be blank");
                 }
 
-                //initialize variables to store user inputs
-                long UserID = Long.parseLong(request.getParameter( "userid" ));
-                String Password = request.getParameter("password");
+                long UserID;
+                String Password;
 
+
+                UserID = Long.parseLong(request.getParameter("userid"));
+                Password = request.getParameter("password");
 
                 //retrieve user creds from db and create a student object or throw NotFoundException
                 Student aStudent = authenticate(UserID, Password);
@@ -62,17 +63,26 @@ public class LoginServlet extends HttpServlet {
                 // redirect the user to dashboard
                 response.sendRedirect("./dashboard.jsp");
 
-            }catch(NotFoundException | NumberFormatException e)
+            }
+            catch (NumberFormatException e)
             {
-//                //sending errors to the page thru the session
+                session.setAttribute("errors", e.getMessage());
+                response.sendRedirect("./login.jsp");
+            }
+            catch(NotFoundException e)
+            {
+
                 StringBuffer errorBuffer = new StringBuffer();
                 errorBuffer.append("Your sign in information is not valid. ");
                 errorBuffer.append("Please try again.");
-//                String error = "Login information was invalid. Try again.";
 
                 session.setAttribute("errors", errorBuffer.toString());
+
+//                session.setAttribute("errors", e.getMessage());
                 response.sendRedirect("./login.jsp");
+
             }
+
         }
         catch (Exception e)
         {
