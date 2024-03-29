@@ -42,6 +42,7 @@ public class Lab2Tester {
 				
 	            // initialize the database (i.e. create a database connection)
 	            c = DatabaseConnect.initialize();
+//
 	            Student.initialize(c);
 	            
 	            try // attempt to get a Student that does NOT exist, throws Exception

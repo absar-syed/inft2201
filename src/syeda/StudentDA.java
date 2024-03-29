@@ -6,7 +6,6 @@
 
 package syeda;
 import exceptions.*;
-import org.postgresql.util.PSQLException;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
@@ -312,7 +311,17 @@ public class StudentDA
 		year = aStudent.getYear();
 		String lastAccessAsStr = SQL_DF.format(lastAccess);
 		String enrolDateAsStr = SQL_DF.format(enrolDate);
-//		password = aStudent.getPassword();
+
+
+		Student ExistingRecord = Student.retrieve(id);
+		password = aStudent.getPassword();
+
+		if (!Objects.equals(password, ExistingRecord.getPassword()))
+		{
+			PasswordHasher Pass = new PasswordHasher(password);
+			password = Pass.Hash();
+		}
+
 
 
 		PreparedStatement psUsersUpdate = aConnection.prepareStatement(
