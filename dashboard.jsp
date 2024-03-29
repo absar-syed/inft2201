@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp"%>
 <%@ page import="static syeda.User.DF" %>
+<%@ page import="syeda.Student" %>
 <%
     Student aStudent = (Student) session.getAttribute("student");
 
