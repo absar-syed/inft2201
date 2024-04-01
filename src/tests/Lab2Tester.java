@@ -36,13 +36,13 @@ public class Lab2Tester {
 					" \"bob.mcready@dcmail.ca\", enrol, lastAccess, 's', true, \"CPA\", \"Computer Programmer Analyst\", 3);\n"); 
 			
 			mainStudent = new Student(possibleId,"password", "Robert", "McReady", "bob.mcready@dcmail.ca",
-					enrol, lastAccess, true, 's',"CPA", "Computer Programmer Analyst", 3);
+					lastAccess, enrol, true, 's',"CPA", "Computer Programmer Analyst", 3);
 			mainStudent.dump();
 			try{
 				
 	            // initialize the database (i.e. create a database connection)
 	            c = DatabaseConnect.initialize();
-//
+
 	            Student.initialize(c);
 	            
 	            try // attempt to get a Student that does NOT exist, throws Exception

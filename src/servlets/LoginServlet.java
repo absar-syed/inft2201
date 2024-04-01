@@ -20,15 +20,15 @@ public class LoginServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response)
-                       throws IOException
+            throws IOException
     {
 
         String logFile = "./logger.log";
-	    File f = new File(logFile);
-	    PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
-	    System.setErr(printStream);
-	    System.setOut(printStream);
-	    System.out.println("Log started: " + new java.util.Date());
+        File f = new File(logFile);
+        PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
+        System.setErr(printStream);
+        System.setOut(printStream);
+        System.out.println("Log started: " + new java.util.Date());
 
         try
         {
@@ -98,8 +98,8 @@ public class LoginServlet extends HttpServlet {
 
 
     public void doGet(HttpServletRequest request,
-                            HttpServletResponse response)
-                                    throws IOException {
+                      HttpServletResponse response)
+            throws IOException {
         doPost(request, response);
     }
 

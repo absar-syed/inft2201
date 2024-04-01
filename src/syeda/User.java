@@ -1,11 +1,11 @@
 package syeda;
 
-import exceptions.InvalidIdException;
-import exceptions.InvalidNameException;
-import exceptions.InvalidPasswordException;
-import exceptions.InvalidUserDataException;
+import exceptions.*;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -18,7 +18,7 @@ import static jdk.nashorn.internal.runtime.JSType.isNumber;
  * @version 1.0
  */
 
-public abstract class User implements CollegeInterface {
+public class User implements CollegeInterface {
 
 	/**
 	 * Default user ID
@@ -138,7 +138,7 @@ public abstract class User implements CollegeInterface {
 			User.id = id;
 		}
 		else {
-			throw new InvalidIdException("Id is not the correct length");
+			throw new InvalidIdException("ID is not the correct length");
 		}
 
 	}
@@ -399,7 +399,8 @@ public abstract class User implements CollegeInterface {
 		System.out.println(toString());
 
 	}
-	
+
+
 	/**
 	 * Method to verify the id length to be 9
 	 * @param id insert id number 
@@ -411,4 +412,41 @@ public abstract class User implements CollegeInterface {
 
         return idLength == ID_NUMBER_LENGTH;
     }
+
+
+	public static void initialize(Connection c) {
+		UserDA.initialize(c);
+	}
+
+	public static void terminate() {
+		UserDA.terminate();
+	}
+
+	public static User retrieve(long userid) throws NotFoundException, SQLException {
+		return UserDA.retrieve(userid);
+	}
+
+	public boolean create() throws DuplicateException, ParseException, SQLException, InvalidUserDataException {
+		return UserDA.create(this);
+	}
+
+	public int update() throws NotFoundException, SQLException, InvalidUserDataException {
+		return UserDA.update(this);
+	}
+
+	public int delete() throws NotFoundException, SQLException, InvalidUserDataException {
+		return UserDA.delete(this);
+	}
+
+	/**
+	 * @return null
+	 */
+	@Override
+	public String getTypeForDisplay() {
+		return null;
+	}
+
+
+
+
 }

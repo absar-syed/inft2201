@@ -341,17 +341,17 @@ public class Student extends User {
         return StudentDA.retrieve(studentid);
     }
 
-    public void create() throws DuplicateException, ParseException, SQLException {
-        StudentDA.create(this);
+    public boolean create() throws DuplicateException, ParseException, SQLException, InvalidUserDataException {
+        return StudentDA.create(this);
     }
 
-    public int update() throws NotFoundException, SQLException {
+    public int update() throws NotFoundException, SQLException, InvalidUserDataException {
        return StudentDA.update(this);
     }
 
-    public void delete() throws NotFoundException, SQLException {
+    public int delete() throws NotFoundException, SQLException, InvalidUserDataException {
 
-        StudentDA.delete(this);
+        return StudentDA.delete(this);
     }
 
     public static Student authenticate(long studentid, String password) throws NotFoundException {

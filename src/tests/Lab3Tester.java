@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
 
+import exceptions.InvalidUserDataException;
 import exceptions.NotFoundException;
 import syeda.*;
 
@@ -15,7 +16,7 @@ public class Lab3Tester {
     /** 
      * @param args
      */
-    public static void main(String[] args) throws SQLException, NotFoundException, ParseException {
+    public static void main(String[] args) throws SQLException, NotFoundException, ParseException, InvalidUserDataException {
 
         Connection c = null;
         c = DatabaseConnect.initialize();
@@ -35,7 +36,7 @@ public class Lab3Tester {
         testAuth(100000000, "mypassword");
         System.out.println("*******************************************");
         System.out.println("Should be Successul - Absar");
-        testAuth(100706764, "student");
+        testAuth(100706764, "password");
         System.out.println("*******************************************");
 
         System.out.println("\nUPDATE TEST");

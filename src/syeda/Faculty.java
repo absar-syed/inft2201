@@ -192,17 +192,17 @@ public class Faculty extends User {
 		return FacultyDA.retrieve(studentid);
 	}
 
-	public void create() throws DuplicateException, ParseException, SQLException {
+	public boolean create() throws DuplicateException, ParseException, SQLException {
 		FacultyDA.create(this);
+		return false;
 	}
 
 	public int update() throws NotFoundException, SQLException {
 		return FacultyDA.update(this);
 	}
 
-	public void delete() throws NotFoundException, SQLException {
-
-		FacultyDA.delete(this);
+	public int delete() throws NotFoundException, SQLException {
+		return FacultyDA.delete(this);
 	}
 
 

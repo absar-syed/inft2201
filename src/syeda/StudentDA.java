@@ -6,6 +6,7 @@
 
 package syeda;
 import exceptions.*;
+import syeda.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Objects;
@@ -20,6 +21,11 @@ public class StudentDA
 	 * an instance of SimpleDateFormat that formats the date
 	 */
 	private static final SimpleDateFormat SQL_DF = new SimpleDateFormat("yyyy-MM-dd");
+
+	/**
+	 * Variable that holds an instance of User
+	 */
+	static User aUser;
 
 	/**
 	 * Variable that hold an instance of Student
@@ -141,7 +147,7 @@ public class StudentDA
 	 * @throws SQLException when an error in the SQL is found
 	 * @throws ParseException when string to date parse is unsuccessful
 	 */
-	public static boolean create(Student aStudent) throws DuplicateException, SQLException, ParseException {
+	public static boolean create(Student aStudent) throws DuplicateException, SQLException, ParseException, InvalidUserDataException {
 
 		boolean inserted = false; //insertion success flag
 
@@ -159,25 +165,6 @@ public class StudentDA
 		programDescription = aStudent.getProgramDescription();
 		year = aStudent.getYear();
 
-		PasswordHasher pass = new PasswordHasher(password);
-		String lastAccessAsStr = SQL_DF.format(lastAccess);
-		String enrolDateAsStr = SQL_DF.format(enrolDate);
-
-		// creating the PreparedStatements for the insert statements
-		PreparedStatement psCreateUser = aConnection.prepareStatement(
-		"INSERT INTO Users (userid, password, firstname, lastname, emailaddress, lastaccess, enroldate, enabled, type) " +
-			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); ");
-
-		psCreateUser.setLong(1, id);
-		psCreateUser.setString(2, pass.Hash());
-		psCreateUser.setString(3, firstName);
-		psCreateUser.setString(4, lastName);
-		psCreateUser.setString(5, emailAddress);
-		psCreateUser.setString(6, lastAccessAsStr);
-		psCreateUser.setString(7, enrolDateAsStr);
-		psCreateUser.setBoolean(8, enabled);
-		psCreateUser.setString(9, String.valueOf(type));
-
 		PreparedStatement psCreateStudent = aConnection.prepareStatement(
 		"INSERT INTO Students (userid, programcode, programdescription, year) " +
 			"VALUES (?, ?, ?, ?); ");
@@ -187,7 +174,7 @@ public class StudentDA
 		psCreateStudent.setString(3, programDescription);
 		psCreateStudent.setInt(4, year);
 
-
+		aUser = new User(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate, enabled, type);
 
 		//see if this User/Student already exists in the database
 		try
@@ -198,12 +185,24 @@ public class StudentDA
 		// if NotFoundException, add User/Student to database
 		catch(NotFoundException e)
 		{
+			// create user and student record transaction
 			try
-			{  // execute the SQL update statement
-				boolean Query1 = psCreateUser.execute();
-				boolean Query2 = psCreateStudent.execute();
+			{
+				aConnection.setAutoCommit(false);
 
-				inserted = true;
+				if (aUser.create())
+				{
+					// execute the SQL update statement
+					psCreateStudent.execute();
+					inserted = true;
+					aConnection.commit();
+				}
+				else
+				{
+					aConnection.rollback();
+				}
+
+				aConnection.setAutoCommit(true);
 
 			}
 			catch (SQLException ee) {
@@ -230,54 +229,52 @@ public class StudentDA
 		// retrieve Student data
 		Student aStudent = null;
 
+		aUser = User.retrieve(userid);
+
+		id = aUser.getId();
+		password = aUser.getPassword();
+		firstName = aUser.getFirstName();
+		lastName = aUser.getLastName();
+		emailAddress = aUser.getEmailAddress();
+		lastAccess = aUser.getLastAccess();
+		enrolDate = aUser.getEnrolDate();
+		enabled = aUser.isEnabled();
+		type = aUser.getType();
+
 		// define the SQL query statement using the studentid key
 		PreparedStatement sqlSelect = aConnection.prepareStatement(
-		"SELECT * FROM Students JOIN Users ON Students.userid = Users.userid WHERE students.userid = ?;");
+		"SELECT * FROM Students WHERE userid = ?;");
 		sqlSelect.setLong(1, userid);
 		ResultSet rs = sqlSelect.executeQuery();
 
 		//process the result set like normal
-		try {
 
-			// next method sets cursor & returns true if there is data
-			boolean gotIt = rs.next();
+        // next method sets cursor & returns true if there is data
+        boolean gotIt = rs.next();
 
-			if (gotIt) {
+        if (gotIt) {
 
-				// extract the data
-				id = Long.valueOf(rs.getString("userid"));
-				programCode = String.valueOf(rs.getString("programcode"));
-				programDescription = String.valueOf(rs.getString("programdescription"));
-				year = rs.getInt("year");
-				password = String.valueOf(rs.getString("password"));
-				firstName = String.valueOf(rs.getString("firstname"));
-				lastName = String.valueOf(rs.getString("lastname"));
-				emailAddress = String.valueOf(rs.getString("emailaddress"));
-				lastAccess = SQL_DF.parse(rs.getString("lastaccess"));
-				enrolDate = SQL_DF.parse(rs.getString("enroldate"));
-				enabled = rs.getBoolean("enabled");
-				type = rs.getString("type").charAt(0); //=============================================================================
+            // extract the data
+            programCode = String.valueOf(rs.getString("programcode"));
+            programDescription = String.valueOf(rs.getString("programdescription"));
+            year = rs.getInt("year");
 
-				// create student
-				try{
-					aStudent = new Student(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate,
-							enabled, type, programCode, programDescription, year);
+            // create student
+            try{
+                aStudent = new Student(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate,
+                        enabled, type, programCode, programDescription, year);
 //					System.out.println(aStudent.toString());
 
-				}catch (InvalidUserDataException e)
-				{ System.out.println("Error making a record: " + e.getMessage());}
+            }catch (InvalidUserDataException e)
+            { System.out.println("Error making a record: " + e.getMessage());}
 
-			} else	{// nothing was retrieved
+        } else	{// nothing was retrieved
 
-				throw new NotFoundException("Problem retrieving Student record, Student ID " + userid +" does not exist in the system.");
+            throw new NotFoundException("Problem retrieving Student record, Student ID " + userid +" does not exist in the system.");
 
-			}
-
-			rs.close();
-
-		}catch (ParseException e) {
-            throw new RuntimeException(e.getMessage());
         }
+
+        rs.close();
 
         return aStudent;
 	}
@@ -290,7 +287,7 @@ public class StudentDA
 	 * @throws NotFoundException when a record is not found
 	 * @throws SQLException when an error in the SQL is found
 	 */
-	public static int update(Student aStudent) throws NotFoundException, SQLException {
+	public static int update(Student aStudent) throws NotFoundException, SQLException, InvalidUserDataException {
 
 		int records = 0;  //records updated in method
 
@@ -309,9 +306,6 @@ public class StudentDA
 		programCode = aStudent.getProgramCode();
 		programDescription = aStudent.getProgramDescription();
 		year = aStudent.getYear();
-		String lastAccessAsStr = SQL_DF.format(lastAccess);
-		String enrolDateAsStr = SQL_DF.format(enrolDate);
-
 
 		Student ExistingRecord = Student.retrieve(id);
 		password = aStudent.getPassword();
@@ -322,20 +316,7 @@ public class StudentDA
 			password = Pass.Hash();
 		}
 
-
-
-		PreparedStatement psUsersUpdate = aConnection.prepareStatement(
-		"UPDATE Users SET firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?, " +
-			"Enabled= ? WHERE userid = ?");
-
-		psUsersUpdate.setString(1, firstName);
-		psUsersUpdate.setString(2, lastName);
-		psUsersUpdate.setString(3, emailAddress);
-		psUsersUpdate.setString(4, lastAccessAsStr);
-		psUsersUpdate.setString(5, enrolDateAsStr);
-		psUsersUpdate.setString(6, String.valueOf(type));
-		psUsersUpdate.setBoolean(7, enabled);
-		psUsersUpdate.setLong(8,id);
+		aUser = new User(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate, enabled, type);
 
 		PreparedStatement psStudentsUpdate = aConnection.prepareStatement(
 		"UPDATE Students SET programcode = ?, programdescription = ?, year = ? " +
@@ -347,15 +328,13 @@ public class StudentDA
 		psStudentsUpdate.setLong(4, id);
 
 
-
-
 		// see if this student exists in the database
 		// NotFoundException is thrown by find method
 		try
 		{
 			retrieve(id);  //determine if there is a student record to be updated
 			// if found, execute the SQL update statement
-			records = psUsersUpdate.executeUpdate() + psStudentsUpdate.executeUpdate();
+			records = aUser.update() + psStudentsUpdate.executeUpdate();
 		}catch(NotFoundException e)
 		{
 			throw new NotFoundException("Student with student ID " + id
@@ -373,8 +352,7 @@ public class StudentDA
 	 * @throws NotFoundException when a record cannot be found
 	 * @throws SQLException when an error in the SQL is found
 	 */
-	public static int delete(Student aStudent) throws NotFoundException, SQLException
-	{
+	public static int delete(Student aStudent) throws NotFoundException, SQLException, InvalidUserDataException {
 		int records = 0;
 
 		// retrieve the data
@@ -382,23 +360,19 @@ public class StudentDA
 		firstName = aStudent.getFirstName();
 
 		// create the SQL delete statement
-		PreparedStatement psDelete1 = aConnection.prepareStatement(
+		PreparedStatement psDelete = aConnection.prepareStatement(
 		"DELETE FROM Students WHERE userid = ?;");
 
+		aUser = new User(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate, enabled, type);
 
-		PreparedStatement psDelete2 = aConnection.prepareStatement(
-		"DELETE FROM Users WHERE userid = ?;");
-
-
-		psDelete1.setLong(1, id);
-		psDelete2.setLong(1, id);
+		psDelete.setLong(1, id);
 
 		// see if this student already exists in the database
 		try
 		{
 			retrieve(id);  //used to determine if record exists for the passed student
     		// if found, execute the SQL update statement
-			records = psDelete1.executeUpdate() + psDelete2.executeUpdate();
+			records = psDelete.executeUpdate() + aUser.delete();
 
 		}catch(NotFoundException e)
 		{
