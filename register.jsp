@@ -9,7 +9,6 @@
 <%@include file="header.jsp"%>
 <%
     String errorMessage = null;
-    String logoutMessage = null;
 
     String studentID = (String) session.getAttribute("validStudentID");
     String password = (String)session.getAttribute("validPassword");
@@ -22,9 +21,6 @@
 
     if (session.getAttribute("errors") != null) {
         errorMessage = (String) session.getAttribute("errors");
-    }
-    else if (session.getAttribute("loggedOut") != null) {
-        logoutMessage = (String) session.getAttribute("loggedOut");
     }
 
     if (session.getAttribute("student") != null) {
@@ -85,12 +81,6 @@
             <%=errorMessage%>
         </div>
         <%}
-        else if (logoutMessage != null)  { %>
-        <div class="alert alert-info" role="alert">
-            <%= logoutMessage%>
-        </div>
-        <% }
-        session.removeAttribute("loggedOut");
         session.removeAttribute("errors");
         %>
 

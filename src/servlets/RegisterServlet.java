@@ -1,12 +1,10 @@
 package servlets;
 
+import exceptions.InvalidIdException;
 import exceptions.InvalidNameException;
 import exceptions.InvalidPasswordException;
-import exceptions.InvalidUserDataException;
 import exceptions.NotFoundException;
-import jdk.nashorn.internal.runtime.ECMAException;
 import syeda.DatabaseConnect;
-import syeda.PasswordHasher;
 import syeda.Student;
 import syeda.User;
 
@@ -48,7 +46,7 @@ public class RegisterServlet extends HttpServlet {
             HttpSession session = request.getSession(true); //retrieve the session (or start)
 
             boolean anyErrors = false;
-            Student aStudent = null;
+            Student aStudent;
 
             Long inputtedID = null;
             String inputtedPassword = null;
@@ -59,15 +57,28 @@ public class RegisterServlet extends HttpServlet {
             String inputtedProgramDescription = null;
             int inputtedYear = 0;
 
+
             //ID VALIDATION
             try
             {
-                inputtedID = Long.parseLong(request.getParameter("userid").trim());
+                String year = request.getParameter("userid");
+
+                if (year.isEmpty())
+                {
+                    anyErrors = true;
+                    session.setAttribute("errors", "User ID cannot be blank!");
+                    response.sendRedirect("./register.jsp");
+                }
+
+                inputtedID = Long.parseLong(year.trim());
 
                 try
                 {
-                    aStudent = Student.retrieve(inputtedID);
-                    throw new Exception("User ID already exists. Try something else.");
+                    Student.retrieve(inputtedID);
+                    anyErrors = true;
+                    session.setAttribute("errors", "User ID already exists!");
+                    response.sendRedirect("./register.jsp");
+
                 }
                 catch (NotFoundException e)
                 {
@@ -78,7 +89,8 @@ public class RegisterServlet extends HttpServlet {
                     else
                     {
                         anyErrors = true;
-                        throw new NumberFormatException("User ID must be 9 digits!");
+                        session.setAttribute("errors", "User ID must be 9 digits!");
+                        response.sendRedirect("./register.jsp");
                     }
                 }
 
@@ -86,7 +98,8 @@ public class RegisterServlet extends HttpServlet {
             catch (NumberFormatException e)
             {
                 anyErrors = true;
-                session.setAttribute("errors", e.getMessage());
+                session.setAttribute("errors", "User ID must be numeric!");
+                response.sendRedirect("./register.jsp");
             }
 
             //PASSWORD VALIDATION
@@ -114,6 +127,7 @@ public class RegisterServlet extends HttpServlet {
             catch (InvalidPasswordException e)
             {
                 session.setAttribute("errors", e.getMessage());
+                response.sendRedirect("./register.jsp");
             }
 
             //FIRST NAME VALIDATION
@@ -141,6 +155,7 @@ public class RegisterServlet extends HttpServlet {
             {
 
                 session.setAttribute("errors", e.getMessage());
+                response.sendRedirect("./register.jsp");
             }
 
             //LAST NAME VALIDATION
@@ -168,6 +183,7 @@ public class RegisterServlet extends HttpServlet {
             {
 
                 session.setAttribute("errors", e.getMessage());
+                response.sendRedirect("./register.jsp");
             }
 
             //EMAIL ADDRESS VALIDATION
@@ -190,6 +206,7 @@ public class RegisterServlet extends HttpServlet {
             {
                 anyErrors = true;
                 session.setAttribute("errors", e.getMessage());
+                response.sendRedirect("./register.jsp");
             }
 
             //PROGRAM CODE VALIDATION
@@ -229,6 +246,7 @@ public class RegisterServlet extends HttpServlet {
             catch (Exception e)
             {
                 session.setAttribute("errors", e.getMessage());
+                response.sendRedirect("./register.jsp");
             }
 
 
@@ -249,6 +267,7 @@ public class RegisterServlet extends HttpServlet {
             catch (Exception e)
             {
                 session.setAttribute("errors", e.getMessage());
+                response.sendRedirect("./register.jsp");
             }
 
 
@@ -268,6 +287,7 @@ public class RegisterServlet extends HttpServlet {
             catch (NumberFormatException e)
             {
                 session.setAttribute("errors", e.getMessage());
+                response.sendRedirect("./register.jsp");
             }
 
 
@@ -281,9 +301,7 @@ public class RegisterServlet extends HttpServlet {
                 boolean enabled = true;
                 char type = 's';
 
-                PasswordHasher Pass = new PasswordHasher(inputtedPassword);
-
-                aStudent = new Student(inputtedID, Pass.Hash(), inputtedFirstName, inputtedLastName, inputtedEmailAddress,
+                aStudent = new Student(inputtedID, inputtedPassword, inputtedFirstName, inputtedLastName, inputtedEmailAddress,
                                        lastAccess, enrolDate, enabled, type, inputtedProgramCode, inputtedProgramDescription,
                                        inputtedYear);
 
