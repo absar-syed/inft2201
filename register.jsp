@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@include file="header.jsp"%>
 <%
-    String errorMessage = null;
+
 
     String studentID = (String) session.getAttribute("validStudentID");
     String password = (String)session.getAttribute("validPassword");
@@ -19,9 +19,7 @@
     String programDescription = (String)session.getAttribute("validProgramDescription");
     String year = (String) session.getAttribute("validYear");
 
-    if (session.getAttribute("errors") != null) {
-        errorMessage = (String) session.getAttribute("errors");
-    }
+
 
     if (session.getAttribute("student") != null) {
         response.sendRedirect("./dashboard.jsp");
@@ -76,9 +74,9 @@
     <form class="m-5" name="Register" method="post" action="./Register">
 
         <h1>Register</h1>
-        <% if (errorMessage != null) {%>
+        <% if (session.getAttribute("errors") != null) {%>
         <div class="alert alert-danger">
-            <%=errorMessage%>
+            <%=session.getAttribute("errors")%>
         </div>
         <%}
         session.removeAttribute("errors");

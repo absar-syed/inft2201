@@ -1,9 +1,6 @@
 package servlets;
 
-import exceptions.InvalidIdException;
-import exceptions.InvalidNameException;
-import exceptions.InvalidPasswordException;
-import exceptions.NotFoundException;
+import exceptions.*;
 import syeda.DatabaseConnect;
 import syeda.Student;
 import syeda.User;
@@ -17,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.file.Files;
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Objects;
 
@@ -40,280 +39,8 @@ public class RegisterServlet extends HttpServlet {
 
         try
         {
-
             Connection c = DatabaseConnect.initialize();
             Student.initialize(c);
-            HttpSession session = request.getSession(true); //retrieve the session (or start)
-
-            boolean anyErrors = false;
-            Student aStudent;
-
-            Long inputtedID = null;
-            String inputtedPassword = null;
-            String inputtedFirstName = null;
-            String inputtedLastName = null;
-            String inputtedEmailAddress = null;
-            String inputtedProgramCode = null;
-            String inputtedProgramDescription = null;
-            int inputtedYear = 0;
-
-
-            //ID VALIDATION
-            try
-            {
-                String year = request.getParameter("userid");
-
-                if (year.isEmpty())
-                {
-                    anyErrors = true;
-                    session.setAttribute("errors", "User ID cannot be blank!");
-                    response.sendRedirect("./register.jsp");
-                }
-
-                inputtedID = Long.parseLong(year.trim());
-
-                try
-                {
-                    Student.retrieve(inputtedID);
-                    anyErrors = true;
-                    session.setAttribute("errors", "User ID already exists!");
-                    response.sendRedirect("./register.jsp");
-
-                }
-                catch (NotFoundException e)
-                {
-                    if (User.verifyID(inputtedID))
-                    {
-                        session.setAttribute("validStudentID", inputtedID);
-                    }
-                    else
-                    {
-                        anyErrors = true;
-                        session.setAttribute("errors", "User ID must be 9 digits!");
-                        response.sendRedirect("./register.jsp");
-                    }
-                }
-
-            }
-            catch (NumberFormatException e)
-            {
-                anyErrors = true;
-                session.setAttribute("errors", "User ID must be numeric!");
-                response.sendRedirect("./register.jsp");
-            }
-
-            //PASSWORD VALIDATION
-            try
-            {
-                inputtedPassword = request.getParameter("password").trim();
-
-                if (inputtedPassword.length() > MAXIMUM_PASSWORD_LENGTH) {
-
-                    anyErrors = true;
-                    throw new InvalidPasswordException("Password is too long. Maximum of 64 characters!");
-
-                }
-
-                if ( inputtedPassword.length() < MINIMUM_PASSWORD_LENGTH ) {
-
-                    anyErrors = true;
-                    throw new InvalidPasswordException("Password is too short. Minimum of 8 characters!");
-
-                }
-
-                session.setAttribute("validPassword", inputtedPassword);
-
-            }
-            catch (InvalidPasswordException e)
-            {
-                session.setAttribute("errors", e.getMessage());
-                response.sendRedirect("./register.jsp");
-            }
-
-            //FIRST NAME VALIDATION
-            try
-            {
-                inputtedFirstName = request.getParameter("firstname").trim();
-
-                if (isNumber(inputtedFirstName)) {
-
-                    anyErrors = true;
-                    throw new InvalidNameException("First name cannot be a number!");
-
-                }
-                if (Objects.equals(inputtedFirstName, "")) {
-
-                    anyErrors = true;
-                    throw new InvalidNameException("First name must not be empty!");
-
-                }
-
-                session.setAttribute("validFirstName", inputtedFirstName);
-
-            }
-            catch (InvalidNameException e)
-            {
-
-                session.setAttribute("errors", e.getMessage());
-                response.sendRedirect("./register.jsp");
-            }
-
-            //LAST NAME VALIDATION
-            try
-            {
-                inputtedLastName = request.getParameter("lastname").trim();
-
-                if (isNumber(inputtedLastName)) {
-
-                    anyErrors = true;
-                    throw new InvalidNameException("Last name cannot be a number!");
-
-                }
-                if (Objects.equals(inputtedLastName, "")) {
-
-                    anyErrors = true;
-                    throw new InvalidNameException("Last name must not be empty!");
-
-                }
-
-                session.setAttribute("validFirstName", inputtedLastName);
-
-            }
-            catch (InvalidNameException e)
-            {
-
-                session.setAttribute("errors", e.getMessage());
-                response.sendRedirect("./register.jsp");
-            }
-
-            //EMAIL ADDRESS VALIDATION
-            try
-            {
-                inputtedEmailAddress = request.getParameter("email").trim();
-
-                if (inputtedEmailAddress.isEmpty())
-                {
-                    anyErrors = true;
-                    throw new Exception("Email Input must not be empty!");
-                }
-
-                InternetAddress emailValidation = new InternetAddress(inputtedEmailAddress);
-                emailValidation.validate();
-
-                session.setAttribute("validEmailAddress", inputtedEmailAddress);
-            }
-            catch (AddressException e)
-            {
-                anyErrors = true;
-                session.setAttribute("errors", e.getMessage());
-                response.sendRedirect("./register.jsp");
-            }
-
-            //PROGRAM CODE VALIDATION
-            try
-            {
-                inputtedProgramCode = request.getParameter("programcode").trim();
-
-                if (inputtedProgramCode.isEmpty())
-                {
-                    anyErrors = true;
-                    throw new Exception("Program Code cannot be empty!");
-                }
-
-                if (!isNumber(inputtedProgramCode))
-                {
-                    inputtedProgramCode.toUpperCase();
-
-                    if (inputtedProgramCode.length() == 4)
-                    {
-                        session.setAttribute("validProgramCode", inputtedProgramCode);
-                    }
-                    else
-                    {
-                        anyErrors = true;
-                        throw new Exception("Program Code must be 4 characters long!");
-                    }
-
-                }
-                else
-                {
-                    anyErrors = true;
-                    throw new Exception("Program Code must alphabetic!");
-                }
-
-                session.setAttribute("validProgramCode", inputtedProgramCode);
-            }
-            catch (Exception e)
-            {
-                session.setAttribute("errors", e.getMessage());
-                response.sendRedirect("./register.jsp");
-            }
-
-
-            //PROGRAM DESCRIPTION
-            try
-            {
-                inputtedProgramDescription = request.getParameter("programdescription").trim();
-
-                if (inputtedProgramDescription.isEmpty())
-                {
-                    anyErrors = true;
-                    throw new Exception("Program Description cannot be empty!");
-                }
-
-                session.setAttribute("validProgramDescription", inputtedProgramDescription);
-
-            }
-            catch (Exception e)
-            {
-                session.setAttribute("errors", e.getMessage());
-                response.sendRedirect("./register.jsp");
-            }
-
-
-            //YEAR VALIDATION
-            try
-            {
-                inputtedYear = Integer.parseInt(request.getParameter("year").trim());
-
-                if (inputtedYear > 3 || inputtedYear < 1)
-                {
-                    anyErrors = true;
-                    throw new Exception("For year you can only input 1, 2 or 3");
-                }
-
-                session.setAttribute("validYear", inputtedYear);
-            }
-            catch (NumberFormatException e)
-            {
-                session.setAttribute("errors", e.getMessage());
-                response.sendRedirect("./register.jsp");
-            }
-
-
-
-            //if no errors enter into database
-            if (!anyErrors)
-            {
-
-                Date lastAccess = new Date();
-                Date enrolDate = new Date();
-                boolean enabled = true;
-                char type = 's';
-
-                aStudent = new Student(inputtedID, inputtedPassword, inputtedFirstName, inputtedLastName, inputtedEmailAddress,
-                                       lastAccess, enrolDate, enabled, type, inputtedProgramCode, inputtedProgramDescription,
-                                       inputtedYear);
-
-                aStudent.create();
-                session.setAttribute("student", aStudent);
-                response.sendRedirect("./dashboard.jsp");
-            }
-            else
-            {
-                response.sendRedirect("./register.jsp");
-            }
-
 
         }
         catch (Exception e)
@@ -327,8 +54,314 @@ public class RegisterServlet extends HttpServlet {
 
         }
 
+        HttpSession session = request.getSession(true); //retrieve the session (or start)
+
+        boolean anyErrors = false;
+        Student aStudent;
+        Long inputtedID = null;
+        String inputtedPassword = null;
+        String inputtedFirstName = null;
+        String inputtedLastName = null;
+        String inputtedEmailAddress = null;
+        String inputtedProgramCode = null;
+        String inputtedProgramDescription = null;
+        int inputtedYear = 0;
+        String errorBuilder = "";
 
 
+        //ID VALIDATION
+        String id = request.getParameter("userid");
+
+        if (id.isEmpty())
+        {
+            anyErrors = true;
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("User ID cannot be blank!"));
+
+        }
+        else
+        {
+            try
+            {
+                inputtedID = Long.parseLong(id.trim());
+
+                try
+                {
+                    Student.retrieve(inputtedID);
+                    anyErrors = true;
+                    session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("User ID already exists!"));
+
+                }
+                catch (NotFoundException | SQLException e)
+                {
+                    if (User.verifyID(inputtedID))
+                    {
+                        session.setAttribute("validStudentID", Long.toString(inputtedID));
+                    }
+                    else
+                    {
+                        anyErrors = true;
+                        session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("User ID must be 9 digits!"));
+
+                    }
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                anyErrors = true;
+                session.setAttribute("errors", errorBuilder = errorBuilder.concat("\nUser ID must be numeric!"));
+
+            }
+
+
+        }
+
+        //PASSWORD VALIDATION
+
+        inputtedPassword = request.getParameter("password").trim();
+
+        if (inputtedPassword.isEmpty())
+        {
+            anyErrors = true;
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("Password cannot be empty!"));
+        }
+        else
+        {
+            try
+            {
+
+
+                if (inputtedPassword.length() > MAXIMUM_PASSWORD_LENGTH) {
+
+
+                    throw new InvalidPasswordException("Password is too long. Maximum of 64 characters!");
+
+                }
+
+                if ( inputtedPassword.length() < MINIMUM_PASSWORD_LENGTH ) {
+
+
+                    throw new InvalidPasswordException("Password is too short. Minimum of 8 characters!");
+
+                }
+
+                session.setAttribute("validPassword", inputtedPassword);
+
+            }
+            catch (InvalidPasswordException e)
+            {
+                anyErrors = true;
+                session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
+
+            }
+        }
+
+
+
+        //FIRST NAME VALIDATION
+        try
+        {
+            inputtedFirstName = request.getParameter("firstname").trim();
+
+            if (isNumber(inputtedFirstName)) {
+
+                anyErrors = true;
+                throw new InvalidNameException("First name cannot be a number!");
+
+            }
+            if (Objects.equals(inputtedFirstName, "")) {
+
+                anyErrors = true;
+                throw new InvalidNameException("First name must not be empty!");
+
+            }
+
+            session.setAttribute("validFirstName", inputtedFirstName);
+
+        }
+        catch (InvalidNameException e)
+        {
+
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
+
+        }
+
+        //LAST NAME VALIDATION
+        try
+        {
+            inputtedLastName = request.getParameter("lastname").trim();
+
+            if (isNumber(inputtedLastName)) {
+
+                anyErrors = true;
+                throw new InvalidNameException("Last name cannot be a number!");
+
+            }
+            if (Objects.equals(inputtedLastName, "")) {
+
+                anyErrors = true;
+                throw new InvalidNameException("Last name must not be empty!");
+
+            }
+
+            session.setAttribute("validLastName", inputtedLastName);
+
+        }
+        catch (InvalidNameException e)
+        {
+
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
+
+        }
+
+        //EMAIL ADDRESS VALIDATION
+        try
+        {
+            inputtedEmailAddress = request.getParameter("email").trim();
+
+            if (inputtedEmailAddress.isEmpty())
+            {
+                anyErrors = true;
+                throw new InvalidUserDataException("Email cannot be empty!");
+            }
+
+            InternetAddress emailValidation = new InternetAddress(inputtedEmailAddress);
+            emailValidation.validate();
+
+            session.setAttribute("validEmailAddress", inputtedEmailAddress);
+        }
+        catch (AddressException | InvalidUserDataException e)
+        {
+            anyErrors = true;
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
+
+        }
+
+        //PROGRAM CODE VALIDATION
+        try
+        {
+            inputtedProgramCode = request.getParameter("programcode").trim();
+
+            if (inputtedProgramCode.isEmpty())
+            {
+                anyErrors = true;
+                throw new InvalidUserDataException("Program Code cannot be empty!");
+            }
+
+            if (!isNumber(inputtedProgramCode))
+            {
+                inputtedProgramCode = inputtedProgramCode.toUpperCase();
+
+                if (inputtedProgramCode.length() == 4)
+                {
+                    session.setAttribute("validProgramCode", inputtedProgramCode);
+                }
+                else
+                {
+                    anyErrors = true;
+                    throw new InvalidUserDataException("Program Code must be 4 characters long!");
+                }
+
+            }
+            else
+            {
+                anyErrors = true;
+                throw new InvalidUserDataException("Program Code must alphabetic!");
+            }
+
+            session.setAttribute("validProgramCode", inputtedProgramCode);
+        }
+        catch (InvalidUserDataException e)
+        {
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
+
+        }
+
+
+        //PROGRAM DESCRIPTION
+        try
+        {
+            inputtedProgramDescription = request.getParameter("programdescription").trim();
+
+            if (inputtedProgramDescription.isEmpty())
+            {
+                anyErrors = true;
+                throw new InvalidUserDataException("Program Description cannot be empty!");
+            }
+
+            session.setAttribute("validProgramDescription", inputtedProgramDescription);
+
+        }
+        catch (InvalidUserDataException e)
+        {
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
+
+        }
+
+
+        //YEAR VALIDATION
+
+        String year = request.getParameter("year");
+
+        if (year.isEmpty())
+        {
+            anyErrors = true;
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("Year cannot be empty!"));
+        }
+        else
+        {
+            try
+            {
+                inputtedYear = Integer.parseInt(request.getParameter("year").trim());
+
+                if (inputtedYear > 3 || inputtedYear < 1)
+                {
+                    throw new InvalidUserDataException("Year can only be 1, 2 or 3");
+                }
+
+                session.setAttribute("validYear", inputtedYear);
+            }
+            catch (NumberFormatException e)
+            {
+                anyErrors = true;
+                session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("Year must be numeric!"));
+            }
+            catch ( InvalidUserDataException e)
+            {
+                anyErrors = true;
+                session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
+            }
+        }
+
+
+        //if no errors enter into database
+        if (!anyErrors)
+        {
+
+            Date lastAccess = new Date();
+            Date enrolDate = new Date();
+            boolean enabled = true;
+            char type = 's';
+
+            try {
+                aStudent = new Student(inputtedID, inputtedPassword, inputtedFirstName, inputtedLastName, inputtedEmailAddress,
+                                       lastAccess, enrolDate, enabled, type, inputtedProgramCode, inputtedProgramDescription,
+                                       inputtedYear);
+            } catch (InvalidUserDataException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                aStudent.create();
+            } catch (DuplicateException | ParseException | SQLException | InvalidUserDataException e) {
+                throw new RuntimeException(e);
+            }
+            session.setAttribute("student", aStudent);
+            response.sendRedirect("./dashboard.jsp");
+        }
+        else
+        {
+            response.sendRedirect("./register.jsp");
+        }
     }
 
     public void doGet(HttpServletRequest request,
