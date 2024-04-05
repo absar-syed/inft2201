@@ -41,6 +41,21 @@
         <servlet-class>servlets.RegisterServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>CancelServlet</servlet-name>
+        <servlet-class>servlets.CancelServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>UpdateServlet</servlet-name>
+        <servlet-class>servlets.UpdateServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ResetUpdateServlet</servlet-name>
+        <servlet-class>servlets.ResetUpdateServlet</servlet-class>
+    </servlet>
+
 
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -55,6 +70,21 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/Register</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>CancelServlet</servlet-name>
+        <url-pattern>/Cancel</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UpdateServlet</servlet-name>
+        <url-pattern>/Update</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ResetUpdateServlet</servlet-name>
+        <url-pattern>/ResetUpdate</url-pattern>
     </servlet-mapping>
 
 </web-app>

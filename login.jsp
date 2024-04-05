@@ -11,6 +11,11 @@
     String errorMessage = null;
     String logoutMessage = null;
 
+    if (session.getAttribute("student") != null)
+    {
+        response.sendRedirect("./dashboard.jsp");
+    }
+
     if (session.getAttribute("errors") != null) {
         errorMessage = (String) session.getAttribute("errors");
     }

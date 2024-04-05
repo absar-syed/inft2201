@@ -293,9 +293,6 @@ public class StudentDA
 
 		// retrieve the student argument attribute values
 		id = aStudent.getId();
-		programCode = aStudent.getProgramCode();
-		programDescription = aStudent.getProgramDescription();
-		year = aStudent.getYear();
 		firstName = aStudent.getFirstName();
 		lastName = aStudent.getLastName();
 		emailAddress = aStudent.getEmailAddress();

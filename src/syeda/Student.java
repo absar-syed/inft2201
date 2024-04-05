@@ -126,7 +126,7 @@ public class Student extends User {
      * programCode mutator
      * @param programCode name the program's code
      */
-    public static void setProgramCode(String programCode) {
+    public void setProgramCode(String programCode) {
         Student.programCode = programCode;
     }
 
@@ -142,7 +142,7 @@ public class Student extends User {
      * programDescription mutator
      * @param programDescription name the program description
      */
-    public static void setProgramDescription(String programDescription) {
+    public void setProgramDescription(String programDescription) {
         Student.programDescription = programDescription;
     }
 
@@ -158,7 +158,7 @@ public class Student extends User {
      * year mutator
      * @param year name the student's year of study
      */
-    public static void setYear(int year) {
+    public void setYear(int year) {
         Student.year = year;
     }
 
@@ -174,7 +174,7 @@ public class Student extends User {
      * marks mutator
      * @param marks record all grades of student
      */
-    public static void setMarks(Vector<Mark> marks) {
+    public void setMarks(Vector<Mark> marks) {
 
         Student.marks = marks;
     }

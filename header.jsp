@@ -15,14 +15,21 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="index.jsp">Home</a>
-                </li>
+
                 <% if (LoggedIn) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="dashboard.jsp">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./update.jsp">Update</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="./Logout">Logout</a>
                     </li>
                 <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="index.jsp">Home</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="register.jsp">Register</a>
                     </li>
