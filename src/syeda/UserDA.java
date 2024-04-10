@@ -287,17 +287,18 @@ public class UserDA {
         User.initialize(c);
 
         PreparedStatement psUsersUpdate = aConnection.prepareStatement(
-                "UPDATE Users SET firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?, " +
+                "UPDATE Users SET password= ?, firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?, " +
                     "Enabled= ? WHERE userid = ?");
 
-        psUsersUpdate.setString(1, firstName);
-        psUsersUpdate.setString(2, lastName);
-        psUsersUpdate.setString(3, emailAddress);
-        psUsersUpdate.setString(4, lastAccessAsStr);
-        psUsersUpdate.setString(5, enrolDateAsStr);
-        psUsersUpdate.setString(6, String.valueOf(type));
-        psUsersUpdate.setBoolean(7, enabled);
-        psUsersUpdate.setLong(8,id);
+        psUsersUpdate.setString(1, password);
+        psUsersUpdate.setString(2, firstName);
+        psUsersUpdate.setString(3, lastName);
+        psUsersUpdate.setString(4, emailAddress);
+        psUsersUpdate.setString(5, lastAccessAsStr);
+        psUsersUpdate.setString(6, enrolDateAsStr);
+        psUsersUpdate.setString(7, String.valueOf(type));
+        psUsersUpdate.setBoolean(8, enabled);
+        psUsersUpdate.setLong(9,id);
 
 
 

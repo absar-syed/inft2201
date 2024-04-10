@@ -23,7 +23,6 @@
     String LastAccess = DF.format(aStudent.getLastAccess()) ;
     String Password = aStudent.getPassword();
 
-
 %>
 
 <html>
@@ -44,50 +43,55 @@
 
         <div class="card-body">
 
-            <% if (session.getAttribute("errors") != null) {%>
-            <div class="alert alert-danger">
-                <%=session.getAttribute("errors")%>
-            </div>
-            <%}
-                session.removeAttribute("errors");
-            %>
+            <form name="Update" method="get" action="./Update">
 
-            <div class="dark input-group mb-3">
-                <label for="firstname" class="input-group-text">First Name</label>
-                <input id="firstname" name="firstname" type="text" class="form-control"   value="<%=FirstName%>">
-            </div>
-            <div class="dark input-group mb-3">
-                <label for="lastname" class="input-group-text">Last Name</label>
-                <input id="lastname" name="lastname" type="text" class="form-control" value="<%=LastName%>">
-            </div>
-            <div class="dark input-group mb-3">
-                <label for="password" class="input-group-text">Password</label>
-                <input id="password" name="password" type="password" class="form-control"  value="<%=Password%>">
-            </div>
-            <div class="input-group mb-3">
-                <label for="email" class="input-group-text">Email</label>
-                <input id="email" name="email" type="text" class="form-control"   value="<%=Email%>">
-            </div>
-            <div class="input-group mb-3">
-                <label for="programcode" class="input-group-text">Program Code</label>
-                <input id="programcode" name="programcode" type="text" class="form-control"   value="<%=ProgramCode%>">
-            </div>
-            <div class="input-group mb-3">
-                <label for="programdescription" class="input-group-text">Program Description</label>
-                <input id="programdescription" name="programdescription" type="text" class="form-control"   value="<%=ProgramDescription%>">
-            </div>
-            <div class="input-group mb-3">
-                <label for="year" class="input-group-text">Year</label>
-                <input id="year" name="year" type="text" class="form-control"   value="<%=Year%>">
-            </div>
-            <a class="small no-decor">*Student Number, enrol date and last access cannot be updated by student*</a>
+                <% if (session.getAttribute("errors") != null) {%>
+                    <div class="alert alert-danger">
+                        <%=session.getAttribute("errors")%>
+                    </div>
+                <%} session.removeAttribute("errors"); %>
+
+                <div class="dark input-group mb-3">
+                    <label for="firstname" class="input-group-text">First Name</label>
+                    <input id="firstname" name="firstname" type="text" class="form-control"   value="<%=FirstName%>">
+                </div>
+                <div class="dark input-group mb-3">
+                    <label for="lastname" class="input-group-text">Last Name</label>
+                    <input id="lastname" name="lastname" type="text" class="form-control" value="<%=LastName%>">
+                </div>
+                <div class="dark input-group mb-3">
+                    <label for="password" class="input-group-text">Password</label>
+                    <input id="password" name="password" type="password" class="form-control"  value="<%=Password%>">
+                </div>
+                <div class="input-group mb-3">
+                    <label for="email" class="input-group-text">Email</label>
+                    <input id="email" name="email" type="text" class="form-control"   value="<%=Email%>">
+                </div>
+                <div class="input-group mb-3">
+                    <label for="programcode" class="input-group-text">Program Code</label>
+                    <input id="programcode" name="programcode" type="text" class="form-control"   value="<%=ProgramCode%>">
+                </div>
+                <div class="input-group mb-3">
+                    <label for="programdescription" class="input-group-text">Program Description</label>
+                    <input id="programdescription" name="programdescription" type="text" class="form-control"   value="<%=ProgramDescription%>">
+                </div>
+                <div class="input-group mb-3">
+                    <label for="year" class="input-group-text">Year</label>
+                    <input id="year" name="year" type="text" class="form-control"   value="<%=Year%>">
+                </div>
+                <a class="small no-decor">*Student Number, enrol date and last access cannot be updated by student*</a>
         </div>
+
     </div>
 
+    <button  type="submit" class="btn btn-primary m-5" >Update</button>
+
+
     <div class="m-5">
+
         <div class="row">
             <div class="col-1">
-                <form  name="Update" method="post" action="./Update">
+                <form  name="Update" method="get" action="./Update">
                     <button  type="submit" class="btn btn-primary " >Update</button>
                 </form>
             </div>

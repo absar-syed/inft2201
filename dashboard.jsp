@@ -39,6 +39,12 @@
 
         <h5 class="card-header">STUDENT DASHBOARD</h5>
 
+        <% if (session.getAttribute("success") != null)  {%>
+            <div class="alert alert-primary">
+                <%=session.getAttribute("success")%>
+            </div>
+        <%} session.removeAttribute("success");%>
+
         <div class="card-body">
             <p class="card-text">Full Name: <%= FullName %></p>
             <p class="card-text">Student Number: <%= StudentID%></p>

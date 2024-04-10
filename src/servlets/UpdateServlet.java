@@ -28,14 +28,6 @@ public class UpdateServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
-
-        String logFile = "./logger.log";
-        File f = new File(logFile);
-        PrintStream printStream = new PrintStream(new BufferedOutputStream(Files.newOutputStream(f.toPath())), true);
-        System.setErr(printStream);
-        System.setOut(printStream);
-        System.out.println("Log started: " + new Date());
-
         try
         {
             Connection c = DatabaseConnect.initialize();
@@ -58,13 +50,12 @@ public class UpdateServlet extends HttpServlet {
 
         boolean anyErrors = false;
         Student aStudent;
-        String inputtedFirstName = null;
-        String inputtedLastName = null;
-        String inputtedPassword = null;
-        String inputtedEmailAddress = null;
-        String inputtedProgramCode = null;
-        String inputtedProgramDescription = null;
-        int inputtedYear = 0;
+        String inputtedLastName;
+        String inputtedPassword;
+        String inputtedEmailAddress;
+        String inputtedProgramCode;
+        String inputtedProgramDescription;
+        int inputtedYear;
         String errorBuilder = "";
 
 
@@ -80,15 +71,13 @@ public class UpdateServlet extends HttpServlet {
         breaking the entire servlet.
         */
 
-        String first = request.getParameter("firstname");
 
         //FIRST NAME VALIDATION
-        if (!Objects.equals(first, aStudent.getFirstName()))
-        {
+
 
             try
             {
-                inputtedFirstName = request.getParameter("firstname").trim();
+                String inputtedFirstName = request.getParameter("firstname").trim();
 
                 if (isNumber(inputtedFirstName)) {
 
@@ -113,13 +102,9 @@ public class UpdateServlet extends HttpServlet {
 
             }
 
-        }
-
-
 
         //LAST NAME VALIDATION
-        if (!Objects.equals(request.getParameter("lastname"), aStudent.getLastName()))
-        {
+
 
             try
             {
@@ -139,7 +124,7 @@ public class UpdateServlet extends HttpServlet {
                 }
 
                 session.setAttribute("validLastName", inputtedLastName);
-                aStudent.setFirstName(inputtedLastName);
+                aStudent.setLastName(inputtedLastName);
 
             }
             catch (InvalidNameException e)
@@ -148,14 +133,12 @@ public class UpdateServlet extends HttpServlet {
                 session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
 
             }
-        }
+
 
 
 
 
         //PASSWORD VALIDATION
-        if (!Objects.equals(request.getParameter("password"), aStudent.getPassword()))
-        {
 
             inputtedPassword = request.getParameter("password").trim();
 
@@ -194,13 +177,11 @@ public class UpdateServlet extends HttpServlet {
 
                 }
             }
-        }
 
 
 
         //EMAIL ADDRESS VALIDATION
-        if (!Objects.equals(request.getParameter("email"), aStudent.getEmailAddress()))
-        {
+
 
             try
             {
@@ -226,13 +207,11 @@ public class UpdateServlet extends HttpServlet {
                 session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
 
             }
-        }
+
 
 
 
         //PROGRAM CODE VALIDATION
-        if (!Objects.equals(request.getParameter("programcode"), aStudent.getProgramCode()))
-        {
 
             try
             {
@@ -273,14 +252,12 @@ public class UpdateServlet extends HttpServlet {
                 session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
 
             }
-        }
+
 
 
 
 
         //PROGRAM DESCRIPTION
-        if (!Objects.equals(request.getParameter("programdescription"), aStudent.getProgramDescription()))
-        {
 
             try
             {
@@ -302,11 +279,10 @@ public class UpdateServlet extends HttpServlet {
                 session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
 
             }
-        }
 
 
-        if (!Objects.equals(request.getParameter("year"), aStudent.getYear()))
-        {
+
+
             //YEAR VALIDATION
 
             String year = request.getParameter("year");
@@ -342,15 +318,17 @@ public class UpdateServlet extends HttpServlet {
                     session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat(e.getMessage()));
                 }
             }
-        }
+
 
 
         //if no errors enter into database
         if (!anyErrors)
         {
+            session.setAttribute("student", aStudent);
 
             try
             {
+                aStudent = (Student) session.getAttribute("student");
                 aStudent.update();
             }
             catch (InvalidUserDataException | SQLException | NotFoundException e)
@@ -358,12 +336,12 @@ public class UpdateServlet extends HttpServlet {
                 throw new RuntimeException(e);
             }
 
-            session.setAttribute("student", aStudent);
+            session.setAttribute("success", "Student Information Updated");
             response.sendRedirect("./dashboard.jsp");
         }
         else
         {
-            response.sendRedirect("./register.jsp");
+            response.sendRedirect("./update.jsp");
         }
     }
 
