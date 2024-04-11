@@ -75,7 +75,7 @@ public class RegisterServlet extends HttpServlet {
         if (id.isEmpty())
         {
             anyErrors = true;
-            session.setAttribute("errors", errorBuilder = errorBuilder.concat("User ID cannot be blank!"));
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("<p>User ID cannot be blank!</p>"));
 
         }
         else
@@ -88,7 +88,7 @@ public class RegisterServlet extends HttpServlet {
                 {
                     Student.retrieve(inputtedID);
                     anyErrors = true;
-                    session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("User ID already exists!"));
+                    session.setAttribute("errors", errorBuilder = errorBuilder.concat("<p>User ID already exists!</p>"));
 
                 }
                 catch (NotFoundException | SQLException e)
@@ -100,7 +100,7 @@ public class RegisterServlet extends HttpServlet {
                     else
                     {
                         anyErrors = true;
-                        session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("User ID must be 9 digits!"));
+                        session.setAttribute("errors", errorBuilder = errorBuilder.concat("<p>User ID must be 9 digits!</p>"));
 
                     }
                 }
@@ -108,7 +108,7 @@ public class RegisterServlet extends HttpServlet {
             catch (NumberFormatException e)
             {
                 anyErrors = true;
-                session.setAttribute("errors", errorBuilder = errorBuilder.concat("\nUser ID must be numeric!"));
+                session.setAttribute("errors", errorBuilder = errorBuilder.concat("<p>User ID must be numeric!</p>"));
 
             }
 
@@ -122,7 +122,7 @@ public class RegisterServlet extends HttpServlet {
         if (inputtedPassword.isEmpty())
         {
             anyErrors = true;
-            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("Password cannot be empty!"));
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("<p>Password cannot be empty!</p>"));
         }
         else
         {
@@ -133,14 +133,14 @@ public class RegisterServlet extends HttpServlet {
                 if (inputtedPassword.length() > MAXIMUM_PASSWORD_LENGTH) {
 
 
-                    throw new InvalidPasswordException("Password is too long. Maximum of 64 characters!");
+                    throw new InvalidPasswordException("<p>Password is too long. Maximum of 64 characters!</p>");
 
                 }
 
                 if ( inputtedPassword.length() < MINIMUM_PASSWORD_LENGTH ) {
 
 
-                    throw new InvalidPasswordException("Password is too short. Minimum of 8 characters!");
+                    throw new InvalidPasswordException("<p>Password is too short. Minimum of 8 characters!</p>");
 
                 }
 
@@ -165,13 +165,13 @@ public class RegisterServlet extends HttpServlet {
             if (isNumber(inputtedFirstName)) {
 
                 anyErrors = true;
-                throw new InvalidNameException("First name cannot be a number!");
+                throw new InvalidNameException("<p>First name cannot be a number!</p>");
 
             }
             if (Objects.equals(inputtedFirstName, "")) {
 
                 anyErrors = true;
-                throw new InvalidNameException("First name must not be empty!");
+                throw new InvalidNameException("<p>First name must not be empty!</p>");
 
             }
 
@@ -193,13 +193,13 @@ public class RegisterServlet extends HttpServlet {
             if (isNumber(inputtedLastName)) {
 
                 anyErrors = true;
-                throw new InvalidNameException("Last name cannot be a number!");
+                throw new InvalidNameException("<p>Last name cannot be a number!</p>");
 
             }
             if (Objects.equals(inputtedLastName, "")) {
 
                 anyErrors = true;
-                throw new InvalidNameException("Last name must not be empty!");
+                throw new InvalidNameException("<p>Last name must not be empty!</p>");
 
             }
 
@@ -221,7 +221,7 @@ public class RegisterServlet extends HttpServlet {
             if (inputtedEmailAddress.isEmpty())
             {
                 anyErrors = true;
-                throw new InvalidUserDataException("Email cannot be empty!");
+                throw new InvalidUserDataException("<p>Email cannot be empty!</p>");
             }
 
             InternetAddress emailValidation = new InternetAddress(inputtedEmailAddress);
@@ -244,7 +244,7 @@ public class RegisterServlet extends HttpServlet {
             if (inputtedProgramCode.isEmpty())
             {
                 anyErrors = true;
-                throw new InvalidUserDataException("Program Code cannot be empty!");
+                throw new InvalidUserDataException("<p>Program Code cannot be empty!</p>");
             }
 
             if (!isNumber(inputtedProgramCode))
@@ -258,14 +258,14 @@ public class RegisterServlet extends HttpServlet {
                 else
                 {
                     anyErrors = true;
-                    throw new InvalidUserDataException("Program Code must be 4 characters long!");
+                    throw new InvalidUserDataException("<p>Program Code must be 4 characters long!</p>");
                 }
 
             }
             else
             {
                 anyErrors = true;
-                throw new InvalidUserDataException("Program Code must alphabetic!");
+                throw new InvalidUserDataException("<p>Program Code must alphabetic!</p>");
             }
 
             session.setAttribute("validProgramCode", inputtedProgramCode);
@@ -285,7 +285,7 @@ public class RegisterServlet extends HttpServlet {
             if (inputtedProgramDescription.isEmpty())
             {
                 anyErrors = true;
-                throw new InvalidUserDataException("Program Description cannot be empty!");
+                throw new InvalidUserDataException("<p>Program Description cannot be empty!</p>");
             }
 
             session.setAttribute("validProgramDescription", inputtedProgramDescription);
@@ -305,7 +305,7 @@ public class RegisterServlet extends HttpServlet {
         if (year.isEmpty())
         {
             anyErrors = true;
-            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("Year cannot be empty!"));
+            session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("<p>Year cannot be empty!</p>"));
         }
         else
         {
@@ -315,7 +315,7 @@ public class RegisterServlet extends HttpServlet {
 
                 if (inputtedYear > 3 || inputtedYear < 1)
                 {
-                    throw new InvalidUserDataException("Year can only be 1, 2 or 3");
+                    throw new InvalidUserDataException("<p>Year can only be 1, 2 or 3</p>");
                 }
 
                 session.setAttribute("validYear", inputtedYear);
@@ -323,7 +323,7 @@ public class RegisterServlet extends HttpServlet {
             catch (NumberFormatException e)
             {
                 anyErrors = true;
-                session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("Year must be numeric!"));
+                session.setAttribute("errors", errorBuilder = errorBuilder.concat("\n").concat("<p>Year must be numeric!</p>"));
             }
             catch ( InvalidUserDataException e)
             {

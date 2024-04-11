@@ -81,19 +81,15 @@
                 </div>
                 <a class="small no-decor">*Student Number, enrol date and last access cannot be updated by student*</a>
         </div>
-
+<%--        <button  type="submit" class="btn btn-primary m-5" >Update</button>--%>
     </div>
-
-    <button  type="submit" class="btn btn-primary m-5" >Update</button>
 
 
     <div class="m-5">
 
         <div class="row">
             <div class="col-1">
-                <form  name="Update" method="get" action="./Update">
                     <button  type="submit" class="btn btn-primary " >Update</button>
-                </form>
             </div>
             <div class="col-1">
                 <form  name="Reset" method="get" action="./ResetUpdate">

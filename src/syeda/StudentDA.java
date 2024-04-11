@@ -304,16 +304,16 @@ public class StudentDA
 		programDescription = aStudent.getProgramDescription();
 		year = aStudent.getYear();
 
-		Student ExistingRecord = Student.retrieve(id);
 		password = aStudent.getPassword();
+		String ExistingPassword = User.retrieve(id).getPassword();
 
-		if (!Objects.equals(password, ExistingRecord.getPassword()))
+		if (!Objects.equals(password, ExistingPassword))
 		{
 			PasswordHasher Pass = new PasswordHasher(password);
 			password = Pass.Hash();
 		}
 
-		aUser = new User(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate, enabled, type);
+		User aUser = new User(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate, enabled, type);
 
 		PreparedStatement psStudentsUpdate = aConnection.prepareStatement(
 		"UPDATE Students SET programcode = ?, programdescription = ?, year = ? " +

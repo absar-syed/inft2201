@@ -11,7 +11,15 @@ public class ResetUpdateServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException
     {
+        request.setAttribute("errors", null);
+        request.setAttribute("success", "Update Canceled");
         response.sendRedirect("./update.jsp"); // redirect to dashboard.jsp
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException
+    {
+        doGet(request, response);
     }
 }
 

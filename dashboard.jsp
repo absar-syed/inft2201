@@ -43,7 +43,7 @@
             <div class="alert alert-primary">
                 <%=session.getAttribute("success")%>
             </div>
-        <%} session.removeAttribute("success");%>
+        <%} session.removeAttribute("success"); %>
 
         <div class="card-body">
             <p class="card-text">Full Name: <%= FullName %></p>
