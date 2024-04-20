@@ -366,6 +366,7 @@ public class UserDA {
      * @param userid is the user's id number
      * @param password is the user's password
      * @return a User object
+     * @throws NotFoundException when user is not found
      */
     public static User authenticate(long userid, String password) throws NotFoundException
     {

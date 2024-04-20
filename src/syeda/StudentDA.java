@@ -146,6 +146,7 @@ public class StudentDA
 	 * @throws DuplicateException when a duplicate record is found
 	 * @throws SQLException when an error in the SQL is found
 	 * @throws ParseException when string to date parse is unsuccessful
+	 * @throws InvalidUserDataException when user data is invalid
 	 */
 	public static boolean create(Student aStudent) throws DuplicateException, SQLException, ParseException, InvalidUserDataException {
 
@@ -286,7 +287,9 @@ public class StudentDA
 	 * @return an integer, number of records updated
 	 * @throws NotFoundException when a record is not found
 	 * @throws SQLException when an error in the SQL is found
+	 * @throws InvalidUserDataException when user data is invalid
 	 */
+
 	public static int update(Student aStudent) throws NotFoundException, SQLException, InvalidUserDataException {
 
 		int records = 0;  //records updated in method
@@ -349,6 +352,8 @@ public class StudentDA
 	 * @return an integer, number of records deleted
 	 * @throws NotFoundException when a record cannot be found
 	 * @throws SQLException when an error in the SQL is found
+	 * @throws InvalidUserDataException when user data is invalid
+	 * @throws NotFoundException when student is not found
 	 */
 	public static int delete(Student aStudent) throws NotFoundException, SQLException, InvalidUserDataException {
 		int records = 0;
@@ -387,6 +392,7 @@ public class StudentDA
 	 * @param studentid is the student's id number
 	 * @param password is the student's password
 	 * @return a Student object
+	 * @throws NotFoundException when student is not found
 	 */
 	public static Student authenticate(long studentid, String password) throws NotFoundException
 	{

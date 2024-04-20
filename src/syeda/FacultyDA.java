@@ -298,7 +298,9 @@ public class FacultyDA
 	 * @param aFaculty an instance of Faculty
 	 * @return an integer, number of records updated
 	 * @throws NotFoundException when a record is not found
-     */
+	 * @throws SQLException when sql statements is faulty
+	 * @throws InvalidUserDataException when the user data is invalid
+	 */
 	public static int update(Faculty aFaculty) throws NotFoundException, SQLException, InvalidUserDataException {
 
 		int records = 0;  //records updated in method
@@ -393,10 +395,17 @@ public class FacultyDA
 	}
 
 	/**
-	 * Method to authenticate the faculty's account exists
+	 *
+	 * @param facultyid
+	 * @param password
+	 * @return
+	 */
+	/**
+	 *  Method to authenticate the faculty's account exists
 	 * @param facultyid is the faculty's id number
 	 * @param password is the faculty's password
 	 * @return a faculty object
+	 * @throws NotFoundException when account is not found
 	 */
 	public static Faculty authenticate(long facultyid, String password) throws NotFoundException
 	{

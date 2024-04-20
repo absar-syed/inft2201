@@ -13,9 +13,7 @@ import static syeda.Student.retrieve;
 
 public class Lab3Tester {
 
-    /** 
-     * @param args
-     */
+
     public static void main(String[] args) throws SQLException, NotFoundException, ParseException, InvalidUserDataException {
 
         Connection c = null;
@@ -49,9 +47,10 @@ public class Lab3Tester {
 
     }
 
-    /** 
-     * @param id
-     * @param pw
+    /**
+     * method used to test authenticate method
+     * @param id user ID
+     * @param pw user password
      */
     public static void testAuth(long id, String pw) {
 
