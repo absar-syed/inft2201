@@ -197,12 +197,17 @@ public class Faculty extends User {
 		return false;
 	}
 
-	public int update() throws NotFoundException, SQLException {
+	public int update() throws NotFoundException, SQLException, InvalidUserDataException {
 		return FacultyDA.update(this);
 	}
 
 	public int delete() throws NotFoundException, SQLException {
 		return FacultyDA.delete(this);
+	}
+
+	public static Faculty authenticate(long studentid, String password) throws NotFoundException
+	{
+		return FacultyDA.authenticate(studentid, password);
 	}
 
 

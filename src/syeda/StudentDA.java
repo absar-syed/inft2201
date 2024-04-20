@@ -332,7 +332,8 @@ public class StudentDA
 			retrieve(id);  //determine if there is a student record to be updated
 			// if found, execute the SQL update statement
 			records = aUser.update() + psStudentsUpdate.executeUpdate();
-		}catch(NotFoundException e)
+		}
+		catch(NotFoundException e)
 		{
 			throw new NotFoundException("Student with student ID " + id
 					+ " cannot be updated, does not exist in the system.");
@@ -387,7 +388,8 @@ public class StudentDA
 	 * @param password is the student's password
 	 * @return a Student object
 	 */
-	public static Student authenticate(long studentid, String password) throws NotFoundException {
+	public static Student authenticate(long studentid, String password) throws NotFoundException
+	{
 		aStudent = null;
 		try
 		{

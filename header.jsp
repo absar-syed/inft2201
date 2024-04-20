@@ -4,7 +4,11 @@
   Date: 2024-03-07
   Time: 5:38 p.m.
 --%>
-<%  boolean LoggedIn = session.getAttribute("student") != null; %>
+<%
+    boolean LoggedIn = session.getAttribute("student") != null || session.getAttribute("faculty") != null;
+
+    boolean adminLoggedIn = session.getAttribute("admin") != null;
+%>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
     <div class="container-fluid">
@@ -26,7 +30,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="./Logout">Logout</a>
                     </li>
-                <% } else { %>
+                <% } else if (adminLoggedIn) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="admin.jsp">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Logout">Logout</a>
+                    </li>
+                <%  } else { %>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="index.jsp">Home</a>
                     </li>

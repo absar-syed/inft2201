@@ -14,6 +14,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class FacultyDA
 {
@@ -21,6 +22,11 @@ public class FacultyDA
 	 * an instance of SimpleDateFormat that formats the date
 	 */
 	private static final SimpleDateFormat SQL_DF = new SimpleDateFormat("yyyy-MM-dd");
+
+	/**
+	 * Variable that holds an instance of User
+	 */
+	static User aUser;
 
 	/**
 	 * Variable that hold an instance of Faculty
@@ -223,7 +229,7 @@ public class FacultyDA
 	}
 
 	/**
-	 * method to retreive a record from the database
+	 * method to retrieve a record from the database
 	 * @param userid the id of the Faculty
 	 * @return an instance of Faculty
 	 * @throws NotFoundException when a record cannot be found
@@ -234,57 +240,55 @@ public class FacultyDA
 		// retrieve Faculty data
 		Faculty aFaculty = null;
 
+		aUser = User.retrieve(userid);
+
+		id = aUser.getId();
+		password = aUser.getPassword();
+		firstName = aUser.getFirstName();
+		lastName = aUser.getLastName();
+		emailAddress = aUser.getEmailAddress();
+		lastAccess = aUser.getLastAccess();
+		enrolDate = aUser.getEnrolDate();
+		enabled = aUser.isEnabled();
+		type = aUser.getType();
+
+
 		// define the SQL query statement using the userid key
 		PreparedStatement sqlSelect = aConnection.prepareStatement(
-		"SELECT * FROM Faculty JOIN Users ON Faculty.userid = Users.userid WHERE Faculty.userid = ?;");
+		"SELECT * FROM Faculty WHERE userid = ?;");
 		sqlSelect.setLong(1, userid);
 		ResultSet rs = sqlSelect.executeQuery();
 
 		//process the result set like normal
-		try {
 
-			// next method sets cursor & returns true if there is data
-			boolean gotIt = rs.next();
+		// next method sets cursor & returns true if there is data
+		boolean gotIt = rs.next();
 
-			if (gotIt) {
+		if (gotIt)
+		{
 
-				// extract the data
-				id = Long.valueOf(rs.getString("userid"));
-				schoolCode = rs.getString("schoolcode");
-				schoolDescription = rs.getString("schooldescription");
-				office = rs.getString("office");
-				extension = rs.getInt("extension");
-				password = User.DEFAULT_PASSWORD;
-				firstName = String.valueOf(rs.getString("firstname"));
-				lastName = String.valueOf(rs.getString("lastname"));
-				emailAddress = String.valueOf(rs.getString("emailaddress"));
-				lastAccess = SQL_DF.parse(rs.getString("lastaccess"));
-				enrolDate = SQL_DF.parse(rs.getString("enroldate"));
-				enabled = Boolean.parseBoolean(rs.getString("enabled"));
-				type = rs.getString("type").charAt(0); //=============================================================================
+			// extract the data
+			schoolCode = rs.getString("schoolcode");
+			schoolDescription = rs.getString("schooldescription");
+			office = rs.getString("office");
+			extension = rs.getInt("extension");
 
-				// create student
-				try{
-					aFaculty = new Faculty(id, password, firstName, lastName, emailAddress, enrolDate, lastAccess,
-							enabled, type, schoolCode, schoolDescription, office, extension);
+			// create faculty
+			try{
+				aFaculty = new Faculty(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate,
+						enabled, type, schoolCode, schoolDescription, office, extension);
 //					System.out.println(aFaculty.toString());
 
-				}catch (InvalidUserDataException e)
-				{ System.out.println("Error making a record: " + e.getMessage());}
+			}catch (InvalidUserDataException e)
+			{ System.out.println("Error making a record: " + e.getMessage());}
 
-			} else	{// nothing was retrieved
+		}
+		else	// nothing was retrieved
+		{
+			throw new NotFoundException("Problem retrieving Faculty record, Faculty ID " + userid +" does not exist in the system.");
+		}
 
-				throw new NotFoundException("Problem retrieving Faculty record, Faculty ID " + userid +" does not exist in the system.");
-
-			}
-
-			rs.close();
-
-		}catch (SQLException e) {
-			System.out.println(e);
-		} catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+		rs.close();
 
         return aFaculty;
 	}
@@ -294,71 +298,59 @@ public class FacultyDA
 	 * @param aFaculty an instance of Faculty
 	 * @return an integer, number of records updated
 	 * @throws NotFoundException when a record is not found
-	 * @throws SQLException when an error in the SQL is found
-	 */
-	public static int update(Faculty aFaculty) throws NotFoundException{
+     */
+	public static int update(Faculty aFaculty) throws NotFoundException, SQLException, InvalidUserDataException {
 
 		int records = 0;  //records updated in method
+
+		// retrieve the Faculty argument attribute values
+		id = aFaculty.getId();
+		password = aFaculty.getPassword();
+		firstName = aFaculty.getFirstName();
+		lastName = aFaculty.getLastName();
+		emailAddress = aFaculty.getEmailAddress();
+		lastAccess = aFaculty.getLastAccess();
+		enrolDate = aFaculty.getEnrolDate();
+		enabled = aFaculty.isEnabled();
+		type = aFaculty.getType();
+
+		password = aFaculty.getPassword();
+		String ExistingPassword = User.retrieve(id).getPassword();
+
+		if (!Objects.equals(password, ExistingPassword))
+		{
+			PasswordHasher Pass = new PasswordHasher(password);
+			password = Pass.Hash();
+		}
+
+		User aUser = new User(id, password, firstName, lastName, emailAddress, lastAccess, enrolDate, enabled, type);
+
+		PreparedStatement psFacultyUpdate = aConnection.prepareStatement(
+		"UPDATE Faculty SET schoolcode = ?, schooldescription = ?, office = ?, extension = ? WHERE userid = ?;");
+
+		psFacultyUpdate.setString(1, schoolCode);
+		psFacultyUpdate.setString(2, schoolDescription);
+		psFacultyUpdate.setString(3, office);
+		psFacultyUpdate.setInt(4, extension);
+		psFacultyUpdate.setLong(5, id);
+
 
 		// see if this Faculty exists in the database
 		// NotFoundException is thrown by find method
 		try
 		{
 
-			// retrieve the Faculty argument attribute values
-			id = aFaculty.getId();
-			password = aFaculty.getPassword();
-			firstName = aFaculty.getFirstName();
-			lastName = aFaculty.getLastName();
-			emailAddress = aFaculty.getEmailAddress();
-			lastAccess = aFaculty.getLastAccess();
-			enrolDate = aFaculty.getEnrolDate();
-			enabled = aFaculty.isEnabled();
-			type = aFaculty.getType();
-			schoolCode = aFaculty.getSchoolCode();
-			schoolDescription = aFaculty.getSchoolDescription();
-			office = aFaculty.getOffice();
-			extension = aFaculty.getExtension();
-
-			PasswordHasher pass = new PasswordHasher(password);
-			String lastAccessAsStr = SQL_DF.format(lastAccess);
-			String enrolDateAsStr = SQL_DF.format(enrolDate);
-
-			PreparedStatement psUserUpdate = aConnection.prepareStatement(
-					"UPDATE Users SET password = ?, firstname= ?, lastname= ?, emailaddress= ?, lastaccess = ?, EnrolDate= ?, Type= ?," +
-							" Enabled= ? WHERE userid IN (SELECT userid FROM Students WHERE userid = ?); ");
-
-			psUserUpdate.setString(1, pass.Hash());
-			psUserUpdate.setString(2, firstName);
-			psUserUpdate.setString(3, lastName);
-			psUserUpdate.setString(4, emailAddress);
-			psUserUpdate.setString(5, lastAccessAsStr);
-			psUserUpdate.setString(6, enrolDateAsStr);
-			psUserUpdate.setString(7, String.valueOf(type));
-			psUserUpdate.setBoolean(8, enabled);
-			psUserUpdate.setLong(9,id);
-
-			PreparedStatement psFacultyUpdate = aConnection.prepareStatement(
-					"UPDATE Faculty SET schoolcode = ?, schooldescription = ?, office = ?, extension = ? " +
-							"WHERE userid = ?; ");
-
-			psFacultyUpdate.setString(1, schoolCode);
-			psFacultyUpdate.setString(2, schoolDescription);
-			psFacultyUpdate.setString(3, office);
-			psFacultyUpdate.setInt(4, extension);
-			psFacultyUpdate.setLong(5, id);
-
-
 			retrieve(id);  //determine if there is a Faculty record to be updated
 			// if found, execute the SQL update statement
-			records = psUserUpdate.executeUpdate() + psFacultyUpdate.executeUpdate();
+			records = aUser.update() + psFacultyUpdate.executeUpdate();
 
-		}catch(NotFoundException e)
+		}
+		catch(NotFoundException e)
 		{
 			throw new NotFoundException("Faculty with Faculty ID " + id
 					+ " cannot be updated, does not exist in the system.");
-		}catch (SQLException e)
-		{ System.out.println(e);}
+		}
+
 		return records;
 	}
 
@@ -378,23 +370,18 @@ public class FacultyDA
 		firstName = aFaculty.getFirstName();
 
 		// create the SQL delete statement
-		PreparedStatement psDelete1 = aConnection.prepareStatement(
+		PreparedStatement psDelete = aConnection.prepareStatement(
 		"DELETE FROM faculty WHERE userid = ?;");
 
 
-		PreparedStatement psDelete2 = aConnection.prepareStatement(
-		"DELETE FROM Users WHERE userid = ?;");
 
-
-		psDelete1.setLong(1, id);
-		psDelete2.setLong(1, id);
-
+		psDelete.setLong(1, id);
 		// see if this Faculty already exists in the database
 		try
 		{
 			retrieve(id);  //used to determine if record exists for the passed Faculty
     		// if found, execute the SQL update statement
-			records = psDelete1.executeUpdate() + psDelete2.executeUpdate();
+			records = psDelete.executeUpdate();
 
 		}catch(NotFoundException e)
 		{
@@ -403,6 +390,42 @@ public class FacultyDA
 		}catch (SQLException e)
 			{ System.out.println(e);	}
 		return records;
+	}
+
+	/**
+	 * Method to authenticate the faculty's account exists
+	 * @param facultyid is the faculty's id number
+	 * @param password is the faculty's password
+	 * @return a faculty object
+	 */
+	public static Faculty authenticate(long facultyid, String password) throws NotFoundException
+	{
+		aFaculty = null;
+		try
+		{
+
+			aFaculty = retrieve(facultyid);
+
+			String RetrievedPassword = aFaculty.getPassword();
+
+			PasswordHasher Pass = new PasswordHasher(password);
+			String HashedGivenPassword = Pass.Hash();
+
+
+			if (Objects.equals(RetrievedPassword, HashedGivenPassword))
+			{
+				return aFaculty;
+			}
+			else
+			{
+				throw new NotFoundException("Password does not match");
+			}
+
+		}
+		catch (NotFoundException | SQLException e)
+		{
+			throw new NotFoundException(e.getMessage());
+		}
 	}
 
 }

@@ -438,6 +438,10 @@ public class User implements CollegeInterface {
 		return UserDA.delete(this);
 	}
 
+	public static User authenticate(long userid, String password) throws NotFoundException {
+		return UserDA.authenticate(userid, password);
+	}
+
 	/**
 	 * @return null
 	 */
@@ -445,6 +449,7 @@ public class User implements CollegeInterface {
 	public String getTypeForDisplay() {
 		return null;
 	}
+
 
 
 

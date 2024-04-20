@@ -8,12 +8,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.Date;
-import java.util.Objects;
 
 import exceptions.NotFoundException;
 import syeda.DatabaseConnect;
+import syeda.User;
 import syeda.Student;
-import static syeda.Student.authenticate;
+import syeda.Faculty;
+
 
 
 public class LoginServlet extends HttpServlet {
@@ -44,24 +45,56 @@ public class LoginServlet extends HttpServlet {
 
                 long UserID;
                 String Password;
-
+                char type;
 
                 UserID = Long.parseLong(request.getParameter("userid"));
                 Password = request.getParameter("password");
+                User aUser = User.retrieve(UserID);
+                char userType = aUser.getType();
 
-                //retrieve user creds from db and create a student object or throw NotFoundException
-                Student aStudent = authenticate(UserID, Password);
+                if ( userType == 's')
+                {
+                    //retrieve user creds from db and create a student object or throw NotFoundException
+                    Student aStudent = Student.authenticate(UserID, Password);
 
-                //update last access in the db
-                aStudent.setLastAccess(new Date());
-                aStudent.update();
+                    //update last access in the db
+                    aStudent.setLastAccess(new Date());
+                    aStudent.update();
 
-                //set the student object to the session and any errors
-                session.setAttribute("student", aStudent);
+                    //set the student object to the session
+                    session.setAttribute("student", aStudent);
+
+                }
+                else if (userType == 'f')
+                {
+
+                    Faculty aFaculty = Faculty.authenticate(UserID, Password);
+                    aFaculty.setLastAccess(new Date());
+                    aFaculty.update();
+                    session.setAttribute("faculty", aFaculty);
+
+                }
+                else if (userType == 'a')
+                {
+                    User anotherUser = User.authenticate(UserID, Password);
+
+                    anotherUser.setLastAccess(new Date());
+                    anotherUser.update();
+                    session.setAttribute("admin", anotherUser);
+                    session.setAttribute("errors", "");
+
+                    // redirect the user to dashboard
+                    response.sendRedirect("./admin.jsp");
+
+                }
+
+
+                //set errors to session
                 session.setAttribute("errors", "");
 
                 // redirect the user to dashboard
                 response.sendRedirect("./dashboard.jsp");
+
 
             }
             catch (NumberFormatException e)

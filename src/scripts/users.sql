@@ -21,6 +21,9 @@ CREATE TABLE Users (
 
 INSERT INTO Users (userid, password, firstName, lastName, emailAddress, lastAccess, enrolDate, enabled, type) VALUES
 
+
+    (999999999, (encode(digest('mypassword', 'sha256'), 'hex')), 'admin', 'admin', 'admin.admin@admin.ca', '0001-01-01', '0001-01-01', true, 'a'),
+
     (100763281, (encode(digest('password', 'sha256'), 'hex')), 'Adam', 'Kunz', 'adam.kunz@durhamcollege.ca', '2015-01-12', '2015-01-12', true, 'f'),
     (100123098, (encode(digest('password', 'sha256'), 'hex')), 'John', 'Doe', 'john.doe@durhamcollege.ca', '2020-09-11', '2020-09-11', true, 'f'),
     (100987123, (encode(digest('password', 'sha256'), 'hex')), 'Gonzales', 'Metro', 'gonzales.metro@durhamcollege.ca', '2019-09-11', '2019-09-11', true, 'f'),

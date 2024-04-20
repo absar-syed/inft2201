@@ -17,9 +17,9 @@
 
 <body>
     <div class="container m-5 text-white">
-        <h1>DURHAM COLLEGE STUDENTS TRACKING</h1>
+        <h1>DURHAM COLLEGE TRACKING</h1>
         <p>Click the button below to access your account and view your information!</p>
-        <a class="no-decor" href="login.jsp">Login!</a>
+        <a class="btn btn-light" href="login.jsp">Login!</a>
 <%--        <button type="button" class="btn btn-light" >Login</button>--%>
 
     </div>

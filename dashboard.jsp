@@ -1,4 +1,4 @@
-<%--
+        <%--
   Created by IntelliJ IDEA.
   User: Absar Syed
   Date: 2024-03-07
@@ -9,17 +9,63 @@
 <%@ include file="header.jsp"%>
 <%@ page import="static syeda.User.DF" %>
 <%@ page import="syeda.Student" %>
+<%@ page import="syeda.Faculty" %>
 <%
-    Student aStudent = (Student) session.getAttribute("student");
+    //initialize variables
+    boolean studentLogin = false;
+    boolean facultyLogin = false;
+    String FullName = null;
+    long ID = 0;
+    String Email = null;
+    String Enrol = null;
+    String LastAccess = null;
+    String ProgramCode = null;
+    String ProgramDescription = null;
+    int Year = 0;
+    String schoolCode = null;
+    String schoolDescription = null;
+    String office = null;
+    int extension = 0;
 
-    String FullName = aStudent.getFirstName() + " " + aStudent.getLastName();
-    long StudentID = aStudent.getId();
-    String Email = aStudent.getEmailAddress();
-    String ProgramCode = aStudent.getProgramCode();
-    String ProgramDescription = aStudent.getProgramDescription();
-    int Year = aStudent.getYear();
-    String Enrol = DF.format(aStudent.getEnrolDate()) ;
-    String LastAccess = DF.format(aStudent.getLastAccess()) ;
+
+    if (session.getAttribute("student") != null)
+    {
+
+        Student aStudent = (Student) session.getAttribute("student");
+
+        FullName = aStudent.getFirstName() + " " + aStudent.getLastName();
+        ID = aStudent.getId();
+        Email = aStudent.getEmailAddress();
+        ProgramCode = aStudent.getProgramCode();
+        ProgramDescription = aStudent.getProgramDescription();
+        Year = aStudent.getYear();
+        Enrol = DF.format(aStudent.getEnrolDate());
+        LastAccess = DF.format(aStudent.getLastAccess());
+
+        studentLogin = true;
+    }
+    else if (session.getAttribute("faculty") != null)
+    {
+        Faculty aFaculty = (Faculty) session.getAttribute("faculty");
+
+        FullName = aFaculty.getFirstName() + " " + aFaculty.getLastName();
+        ID = aFaculty.getId();
+        Email = aFaculty.getEmailAddress();
+        schoolCode = aFaculty.getSchoolCode();
+        schoolDescription = aFaculty.getSchoolDescription();
+        office = aFaculty.getOffice();
+        extension = aFaculty.getExtension();
+        Enrol = DF.format(aFaculty.getEnrolDate());
+        LastAccess = DF.format(aFaculty.getLastAccess());
+
+        facultyLogin = true;
+    }
+    else
+    {
+        session.setAttribute("errors", "No student or faculty account detected");
+        response.sendRedirect("./login.jsp");
+    }
+
 
 %>
 
@@ -37,24 +83,40 @@
 
     <div class="card m-5 bg-dark text-white">
 
-        <h5 class="card-header">STUDENT DASHBOARD</h5>
+        <h5 class="card-header">DASHBOARD</h5>
 
-        <% if (session.getAttribute("success") != null)  {%>
+        <% if (session.getAttribute("success") != null) {%>
             <div class="alert alert-primary">
                 <%=session.getAttribute("success")%>
             </div>
-        <%} session.removeAttribute("success"); %>
+        <%}
+            session.removeAttribute("success"); %>
 
         <div class="card-body">
-            <p class="card-text">Full Name: <%= FullName %></p>
-            <p class="card-text">Student Number: <%= StudentID%></p>
-            <p class="card-text">Email: <%= Email%></p>
-            <p class="card-text">Program Code: <%= ProgramCode%></p>
-            <p class="card-text">Program Description: <%= ProgramDescription%></p>
-            <p class="card-text">Year: <%= Year%></p>
-            <p class="card-text">Enrol Date: <%= Enrol%></p>
-            <p class="card-text">Last Access: <%= LastAccess%></p>
+            <% if (studentLogin) {%>
 
+                <p class="card-text">Full Name: <%=FullName%></p>
+                <p class="card-text">Student Number: <%=ID%></p>
+                <p class="card-text">Email: <%=Email%></p>
+                <p class="card-text">Program Code: <%=ProgramCode%></p>
+                <p class="card-text">Program Description: <%=ProgramDescription%></p>
+                <p class="card-text">Year: <%=Year%></p>
+                <p class="card-text">Enrol Date: <%=Enrol%></p>
+                <p class="card-text">Last Access: <%=LastAccess%></p>
+
+            <% } else if (facultyLogin) { %>
+
+                <p class="card-text">Full Name: <%=FullName%></p>
+                <p class="card-text">Student Number: <%=ID%></p>
+                <p class="card-text">Email: <%=Email%></p>
+                <p class="card-text">Program Code: <%=schoolCode%></p>
+                <p class="card-text">Program Description: <%=schoolDescription%></p>
+                <p class="card-text">Office: <%=office%></p>
+                <p class="card-text">Extension: <%=extension%></p>
+                <p class="card-text">Enrol Date: <%=Enrol%></p>
+                <p class="card-text">Last Access: <%=LastAccess%></p>
+
+            <% } %>
         </div>
     </div>
 

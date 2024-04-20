@@ -8,26 +8,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="header.jsp"%>
 <%@ page import="static syeda.User.DF" %>
-<%@ page import="syeda.Student" %>
+<%@ page import="syeda.User" %>
 <%
-    Student aStudent = (Student) session.getAttribute("student");
+    User aUser = (User) session.getAttribute("editUser");
 
-    String FirstName = aStudent.getFirstName();
-    String LastName = aStudent.getLastName();
-    long StudentID = aStudent.getId();
-    String Email = aStudent.getEmailAddress();
-    String ProgramCode = aStudent.getProgramCode();
-    String ProgramDescription = aStudent.getProgramDescription();
-    int Year = aStudent.getYear();
-    String Enrol = DF.format(aStudent.getEnrolDate()) ;
-    String LastAccess = DF.format(aStudent.getLastAccess()) ;
-    String Password = aStudent.getPassword();
+    String FirstName = aUser.getFirstName();
+    String LastName = aUser.getLastName();
+    long ID = aUser.getId();
+    String Email = aUser.getEmailAddress();
+    String Enrol = DF.format(aUser.getEnrolDate()) ;
+    String LastAccess = DF.format(aUser.getLastAccess()) ;
+    String Password = aUser.getPassword();
 
 %>
 
 <html>
 <head>
-    <title>Update Student Information</title>
+    <title>Edit User Information</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.css">
     <link rel="stylesheet" href="content/style.css">
@@ -36,15 +33,15 @@
 
 <body>
 
-<form name="Update" method="get" action="./Update">
+
 
     <div class="card m-5 bg-dark text-white">
 
-        <h5 class="card-header">UPDATE STUDENT INFORMATION</h5>
+        <h5 class="card-header">ADMIN EDIT</h5>
 
         <div class="card-body">
 
-
+            <form name="Update" method="get" action="./Update">
 
                 <% if (session.getAttribute("errors") != null) {%>
                     <div class="alert alert-danger">
@@ -68,19 +65,7 @@
                     <label for="email" class="input-group-text">Email</label>
                     <input id="email" name="email" type="text" class="form-control"   value="<%=Email%>">
                 </div>
-                <div class="input-group mb-3">
-                    <label for="programcode" class="input-group-text">Program Code</label>
-                    <input id="programcode" name="programcode" type="text" class="form-control"   value="<%=ProgramCode%>">
-                </div>
-                <div class="input-group mb-3">
-                    <label for="programdescription" class="input-group-text">Program Description</label>
-                    <input id="programdescription" name="programdescription" type="text" class="form-control"   value="<%=ProgramDescription%>">
-                </div>
-                <div class="input-group mb-3">
-                    <label for="year" class="input-group-text">Year</label>
-                    <input id="year" name="year" type="text" class="form-control"   value="<%=Year%>">
-                </div>
-                <a class="small no-decor">*Student Number, enrol date and last access cannot be updated by student*</a>
+                <a class="small no-decor">*ID Number, enrol date and last access cannot be updated*</a>
         </div>
 <%--        <button  type="submit" class="btn btn-primary m-5" >Update</button>--%>
     </div>

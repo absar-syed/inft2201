@@ -360,5 +360,41 @@ public class UserDA {
         return records;
     }
 
+
+    /**
+     * Method to authenticate the User's account exists
+     * @param userid is the user's id number
+     * @param password is the user's password
+     * @return a User object
+     */
+    public static User authenticate(long userid, String password) throws NotFoundException
+    {
+        aUser = null;
+        try
+        {
+
+            aUser = retrieve(userid);
+
+            String RetrievedPassword = aUser.getPassword();
+
+            String HashedGivenPassword = new PasswordHasher(password).Hash();
+
+            if (Objects.equals(RetrievedPassword, HashedGivenPassword))
+            {
+                return aUser;
+            }
+            else
+            {
+                throw new NotFoundException("Password does not match");
+            }
+
+        }
+        catch (NotFoundException | SQLException e)
+        {
+            throw new NotFoundException(e.getMessage());
+        }
+    }
+
+
 }
 
